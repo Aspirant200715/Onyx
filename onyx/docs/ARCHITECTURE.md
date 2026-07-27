@@ -61,3 +61,58 @@ This approach minimizes allocations, improves performance, and follows Rust's ow
 The initial router stores routes in a `Vec<String>` to keep the implementation simple and easy to understand.
 
 This is an intentional educational trade-off. As Ember evolves, the router implementation will transition to a more efficient data structure while preserving its public API.
+
+## Trait-Based Design
+
+Ember favors trait-based abstractions over inheritance.
+
+Traits define shared behavior without forcing unrelated types into a rigid hierarchy.
+
+The `Responder` trait is the first example of this philosophy and will allow different response types to be handled through a common interface.
+
+# Onyx Architecture Overview
+
+## Request Lifecycle
+
+Every HTTP request follows the same lifecycle:
+
+Browser
+→ TCP Connection
+→ Server
+→ HTTP Parser
+→ Request
+→ Router
+→ Handler
+→ Responder
+→ HTTP Response
+→ Browser
+
+## Crate Responsibilities
+
+### ember-core
+
+- Server
+- Router
+- Request
+- Response
+- Middleware
+- Application State
+- Error Handling
+
+### ember-http
+
+Responsible for the HTTP protocol itself.
+
+### ember-macros
+
+Responsible for developer ergonomics through procedural macros.
+
+## Design Principles
+
+- Separation of Concerns
+- Explicit APIs
+- Type Safety
+- Educational Design
+- Stable Public Interfaces
+
+The architecture is intentionally modular so individual components can evolve without affecting unrelated parts of the framework.
