@@ -1,4 +1,7 @@
+use crate::router::initialize_router;
+
 pub fn start_server() {
+    initialize_router();
     initialize_network();
 
     println!("Server started.");

@@ -31,3 +31,13 @@ Onyx follows Rust's default-private visibility model.
 Only components intended for framework users will be marked `pub`. Internal implementation details remain private to reduce API surface area, improve maintainability, and allow internal refactoring without breaking user code.
 
 This approach encourages a clean separation between the framework's public interface and its internal implementation.
+
+## Module Communication
+
+Modules communicate through Rust's module system.
+
+- `crate::` references items from the crate root.
+- `use` creates local aliases for cleaner code.
+- Modules interact through well-defined public interfaces instead of direct file access.
+
+This approach keeps dependencies explicit and helps maintain a scalable architecture as the framework grows.
