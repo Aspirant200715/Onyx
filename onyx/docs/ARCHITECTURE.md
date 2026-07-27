@@ -116,3 +116,20 @@ Responsible for developer ergonomics through procedural macros.
 - Stable Public Interfaces
 
 The architecture is intentionally modular so individual components can evolve without affecting unrelated parts of the framework.
+
+## Error Handling Strategy
+
+Ember uses Rust's `Result<T, E>` type for recoverable errors.
+
+Rather than relying on exceptions, functions explicitly return either a successful value (`Ok`) or an error (`Err`).
+
+### Framework Error Type
+
+The framework defines a central `EmberError` enum to represent domain-specific failures.
+
+Initial variants include:
+
+- `InvalidConfiguration`
+- `Network`
+
+As the framework grows, additional error variants will be added while preserving a consistent error handling strategy.

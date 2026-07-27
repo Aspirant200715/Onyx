@@ -17,3 +17,5 @@ All notable changes to this project will be documented in this file.
 - Added the initial Ember architecture overview.
 - Documented request lifecycle and crate responsibilities.
 - Defined core engineering principles for the framework.
+- Introduced the `EmberError` enum.
+- Documented Ember's error handling strategy.
