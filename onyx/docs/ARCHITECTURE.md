@@ -23,3 +23,11 @@ The `ember-core` crate is organized into Rust modules.
 Modules allow related functionality to be grouped into separate files, improving readability, maintainability, and future extensibility.
 
 Every new subsystem (server, router, middleware, request, response, etc.) will be introduced as its own module.
+
+## Public API Philosophy
+
+Onyx follows Rust's default-private visibility model.
+
+Only components intended for framework users will be marked `pub`. Internal implementation details remain private to reduce API surface area, improve maintainability, and allow internal refactoring without breaking user code.
+
+This approach encourages a clean separation between the framework's public interface and its internal implementation.
