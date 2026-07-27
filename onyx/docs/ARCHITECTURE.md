@@ -41,3 +41,11 @@ Modules communicate through Rust's module system.
 - Modules interact through well-defined public interfaces instead of direct file access.
 
 This approach keeps dependencies explicit and helps maintain a scalable architecture as the framework grows.
+
+## Core Types
+
+The framework models major concepts as Rust structs.
+
+The first core type is `Server`, which will eventually manage networking, configuration, and request handling.
+
+Fields remain private by default to preserve encapsulation. Public behavior is exposed through methods defined in `impl` blocks.

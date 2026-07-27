@@ -1,21 +1,16 @@
-use crate::router::initialize_router;
-
-pub fn start_server() {
-    initialize_router();
-    initialize_network();
-
-    println!("Server started.");
+/// Represents the main Onyx HTTP server.
+pub struct Server {
+    address: String,
 }
 
-fn initialize_network() {
-    println!("Initializing TCP listener...");
-}
+impl Server {
+    pub fn new(address: impl Into<String>) -> Self {
+        Self {
+            address: address.into(),
+        }
+    }
 
-pub fn stop_server() {
-    cleanup_resources();
-    println!("Server stopped.");
-}
-
-fn cleanup_resources() {
-    println!("Cleaning resources...");
+    pub fn address(&self) -> &str {
+        &self.address
+    }
 }
