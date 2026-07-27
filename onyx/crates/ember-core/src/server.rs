@@ -13,4 +13,8 @@ impl Server {
     pub fn address(&self) -> &str {
         &self.address
     }
+
+    pub fn is_default_port(&self) -> bool {
+        self.address.ends_with(":8080")
+    }
 }

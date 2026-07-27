@@ -49,3 +49,9 @@ The framework models major concepts as Rust structs.
 The first core type is `Server`, which will eventually manage networking, configuration, and request handling.
 
 Fields remain private by default to preserve encapsulation. Public behavior is exposed through methods defined in `impl` blocks.
+
+## Ownership Strategy
+
+Core framework types own their internal state. Public methods borrow data whenever possible instead of cloning it.
+
+This approach minimizes allocations, improves performance, and follows Rust's ownership model for safe memory management.
