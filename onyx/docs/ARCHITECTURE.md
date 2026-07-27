@@ -55,3 +55,9 @@ Fields remain private by default to preserve encapsulation. Public behavior is e
 Core framework types own their internal state. Public methods borrow data whenever possible instead of cloning it.
 
 This approach minimizes allocations, improves performance, and follows Rust's ownership model for safe memory management.
+
+## Router Design (Initial)
+
+The initial router stores routes in a `Vec<String>` to keep the implementation simple and easy to understand.
+
+This is an intentional educational trade-off. As Ember evolves, the router implementation will transition to a more efficient data structure while preserving its public API.
