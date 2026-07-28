@@ -29,3 +29,9 @@ All notable changes to this project will be documented in this file.
 - Completed the first end-to-end TCP request/response cycle.
 - Refactored the TCP server into smaller, single-purpose methods.
 - Improved maintainability without changing runtime behavior.
+- Created the `HttpParser` type.
+- Added request line extraction.
+- Added initial unit tests for the HTTP parser.
+- Added the `Method` enum.
+- Added HTTP method parsing.
+- Added unit tests for supported and unsupported methods.

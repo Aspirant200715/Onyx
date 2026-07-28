@@ -237,3 +237,39 @@ Each method has one clearly defined responsibility:
 - `run()` orchestrates the overall server lifecycle.
 
 This structure improves readability, testing, and future extensibility.
+
+## Phase 2 – HTTP Parsing
+
+The HTTP parser is implemented in the `ember-http` crate to separate protocol handling from server runtime responsibilities.
+
+### Phase 2.1 Scope
+
+The first parser extracts only the HTTP request line.
+
+Example:
+
+GET /users HTTP/1.1
+
+No headers or body are parsed yet.
+
+### Design Decisions
+
+- Introduce a dedicated `HttpParser` type.
+- Return `Option<&str>` to safely handle malformed or empty requests.
+- Build the parser incrementally, validating each stage with unit tests before adding new protocol features.
+
+## Phase 2.2 – HTTP Methods
+
+Added a strongly typed `Method` enum to represent supported HTTP request methods.
+
+### Design Decisions
+
+- Store methods as an enum rather than strings.
+- Return `Option<Method>` while the parser is still under construction.
+- Keep method parsing separate from path and version parsing.
+
+### Benefits
+
+- Compile-time type safety.
+- Easier pattern matching.
+- Eliminates string comparisons throughout the framework.
