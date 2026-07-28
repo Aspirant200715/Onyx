@@ -46,3 +46,6 @@ All notable changes to this project will be documented in this file.
 - Replaced `Option`-based HTTP parsing with `Result`.
 - Added the `ParserError` enum.
 - Improved parser diagnostics for malformed requests.
+- Refactored the HTTP parser into multiple focused modules.
+- Improved separation of concerns within `ember-http`.
+- Preserved the public `HttpParser` API while simplifying internal organization.

@@ -337,3 +337,27 @@ Replaced `Option`-based parsing with `Result<Request, ParserError>`.
 - Better debugging.
 - Better testability.
 - Foundation for centralized framework error handling.
+
+## Phase 2.7 – Parser Refactoring
+
+The HTTP parser has been reorganized into smaller modules.
+
+### Module Responsibilities
+
+- `request_line.rs` – Parse the HTTP request line.
+- `headers.rs` – Parse HTTP headers.
+- `request.rs` – Assemble a complete `Request`.
+- `mod.rs` – Expose the parser's public API.
+
+### Design Decisions
+
+- Keep each parser module focused on one responsibility.
+- Hide implementation details behind `HttpParser`.
+- Make future protocol extensions easy to integrate.
+
+### Benefits
+
+- Smaller files.
+- Better readability.
+- Easier testing.
+- Easier long-term maintenance.

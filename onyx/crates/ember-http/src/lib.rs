@@ -4,6 +4,6 @@
 pub mod error;
 pub mod headers;
 pub mod method;
-pub mod parser;
 pub mod request;
+pub mod parser;
 pub mod version;
