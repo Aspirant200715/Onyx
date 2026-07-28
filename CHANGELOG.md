@@ -35,3 +35,7 @@ All notable changes to this project will be documented in this file.
 - Added the `Method` enum.
 - Added HTTP method parsing.
 - Added unit tests for supported and unsupported methods.
+- Added the `Request` struct.
+- Added request path parsing.
+- Added complete request-line parsing.
+- Added unit tests for `Request` parsing.

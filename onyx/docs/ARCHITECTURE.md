@@ -273,3 +273,35 @@ Added a strongly typed `Method` enum to represent supported HTTP request methods
 - Compile-time type safety.
 - Easier pattern matching.
 - Eliminates string comparisons throughout the framework.
+
+## Phase 2.3 – HTTP Version Parsing
+
+Added a strongly typed `HttpVersion` enum.
+
+### Design Decisions
+
+- Represent protocol versions as an enum instead of strings.
+- Keep version parsing independent of method and path parsing.
+- Return `Option<HttpVersion>` until parser error handling is introduced.
+
+### Benefits
+
+- Compile-time validation.
+- Cleaner pattern matching.
+- Easier protocol-specific behavior in future phases.
+
+## Phase 2.4 – Request Object
+
+Added the first `Request` type to represent parsed HTTP requests.
+
+### Responsibilities
+
+- Store the parsed HTTP method.
+- Store the request path.
+- Store the HTTP version.
+
+### Design Decisions
+
+- Use enums for protocol-defined values (`Method`, `HttpVersion`).
+- Use `String` for request paths because the set of possible paths is unbounded.
+- Parse the request once and pass structured data to the rest of the framework.

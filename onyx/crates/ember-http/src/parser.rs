@@ -1,5 +1,9 @@
 
-use crate::method::Method;
+use crate::
+{method::Method,
+version::HttpVersion,
+request::Request,
+};
 pub struct HttpParser;
 
 
@@ -48,6 +52,42 @@ impl HttpParser {
             _ => None,
         }
     }
+
+
+    pub fn parse_version(line: &str) -> Option<HttpVersion> {
+    let version = line.split_whitespace().nth(2)?;
+
+    match version {
+        "HTTP/1.0" => Some(HttpVersion::Http10),
+        "HTTP/1.1" => Some(HttpVersion::Http11),
+        "HTTP/2.0" | "HTTP/2" => Some(HttpVersion::Http2),
+        _ => None,
+    }
+  }
+
+
+
+  pub fn parse_path(line: &str) -> Option<String> {
+    line
+        .split_whitespace()
+        .nth(1)
+        .map(String::from)
+  }
+  
+
+  pub fn parse_request(request: &str) -> Option<Request> {
+    let line = Self::request_line(request)?;
+
+    let method = Self::parse_method(line)?;
+    let path = Self::parse_path(line)?;
+    let version = Self::parse_version(line)?;
+
+    Some(Request {
+        method,
+        path,
+        version,
+    })
+  }
 }
 
 
@@ -70,4 +110,50 @@ fn invalid_method_returns_none() {
     let method = HttpParser::parse_method("HELLO / HTTP/1.1");
 
     assert_eq!(method, None);
+}
+
+
+#[test]
+fn parses_http_11() {
+    let version =
+        HttpParser::parse_version("GET / HTTP/1.1");
+
+    assert_eq!(version, Some(HttpVersion::Http11));
+}
+
+#[test]
+fn parses_http_10() {
+    let version =
+        HttpParser::parse_version("GET / HTTP/1.0");
+
+    assert_eq!(version, Some(HttpVersion::Http10));
+}
+
+#[test]
+fn parses_http_2() {
+    let version =
+        HttpParser::parse_version("GET / HTTP/2");
+
+    assert_eq!(version, Some(HttpVersion::Http2));
+}
+
+#[test]
+fn invalid_version_returns_none() {
+    let version =
+        HttpParser::parse_version("GET / FTP/1.0");
+
+    assert_eq!(version, None);
+}
+
+#[test]
+fn parses_complete_request() {
+    let raw =
+        "GET /users HTTP/1.1\r\nHost: localhost\r\n\r\n";
+
+    let request =
+        HttpParser::parse_request(raw).unwrap();
+
+    assert_eq!(request.method, Method::Get);
+    assert_eq!(request.path, "/users");
+    assert_eq!(request.version, HttpVersion::Http11);
 }
