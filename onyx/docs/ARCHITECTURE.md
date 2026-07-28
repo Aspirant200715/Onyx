@@ -378,3 +378,23 @@ Introduced the `StatusCode` enum to represent standard HTTP response codes.
 - Easier pattern matching.
 - Eliminates magic numbers throughout the framework.
 
+## Phase 3.2 – Response Object
+
+Added the `Response` type to represent outgoing HTTP responses.
+
+### Responsibilities
+
+- Store the HTTP status code.
+- Store response headers.
+- Store the response body.
+
+### Design Decisions
+
+- Use the existing `Header` type for consistency.
+- Use `StatusCode` instead of raw integers.
+- Keep the body as `String` initially; introduce a dedicated `Body` type later.
+
+### Benefits
+
+- Strongly typed response model.
+- Clean separation between response creation and serialization.

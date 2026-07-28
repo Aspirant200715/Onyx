@@ -53,3 +53,6 @@ All notable changes to this project will be documented in this file.
 - Added numeric status code conversion.
 - Added HTTP reason phrase support.
 - Added unit tests for status codes.
+- Added the `Response` struct.
+- Added `Response::new()`.
+- Added unit tests for response creation.
