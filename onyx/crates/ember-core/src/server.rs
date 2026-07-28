@@ -1,6 +1,6 @@
 use std::{
-    io::Read,
-    net::TcpListener,
+    io::{Read,Write},
+    net::{SocketAddr, TcpListener, TcpStream},
 };
 
 use crate::error::EmberError;
@@ -30,33 +30,57 @@ impl Server {
     }
 
     pub fn run(&self) -> Result<(), EmberError> {
-        let listener = self.bind()?;
+    let listener = self.bind()?;
 
-        println!("Ember listening on {}", self.address);
+    println!("Ember listening on {}", self.address);
+    let (mut stream, address) = self.accept_connection(&listener)?;
+    println!("Connection received from {}", address);
+    let request = self.read_request(&mut stream)?;
+    println!("RAW REQUEST");
+    println!("{}", request);
+    self.write_response(&mut stream, 200, "Welcome to Ember!")?;
+    println!("Response sent successfully.");
+    Ok(())
+  }
 
-        let (mut stream, address) = listener
-        .accept()
-        .map_err(|error| EmberError::Network(error.to_string()))?;
+    fn accept_connection(
+        &self,
+        listener: &TcpListener,
+    )-> Result<(TcpStream, SocketAddr), EmberError> {
+        listener
+            .accept()
+            .map_err(|error| EmberError::Network(error.to_string()))
+    }
 
-        println!("Connection received from {}", address);
 
+    fn read_request(
+     &self,
+     stream: &mut TcpStream,
+    ) -> Result<String, EmberError> {
+    let mut buffer = [0; 1024];
 
-        let mut buffer = [0; 1024];
-
-
-        let bytes_read = stream
+    let bytes_read = stream
         .read(&mut buffer)
         .map_err(|error| EmberError::Network(error.to_string()))?;
 
-        println!("Read {} bytes", bytes_read);
+    Ok(String::from_utf8_lossy(&buffer[..bytes_read]).to_string())
+    }
 
-        // Convert the received bytes into UTF-8 text.
-        let request = String::from_utf8_lossy(&buffer[..bytes_read]);
+    fn write_response(
+        &self,
+        stream: &mut TcpStream,
+        status_code: u16,
+        content: &str,
+    ) -> Result<(), EmberError> {
+        let response = format!(
+            "HTTP/1.1 {} OK\r\nContent-Length: {}\r\n\r\n{}",
+            status_code,
+            content.len(),
+            content
+        );
 
-        println!("RAW REQUEST");
-        println!("{}", request);
-
-
-       Ok(())
+        stream
+            .write_all(response.as_bytes())
+            .map_err(|error| EmberError::Network(error.to_string()))
     }
 }

@@ -25,3 +25,7 @@ All notable changes to this project will be documented in this file.
 - Initial runnable networking example completed.
 - Added TCP stream reading support.
 - Display raw HTTP requests received from clients.
+- Added TCP response writing support.
+- Completed the first end-to-end TCP request/response cycle.
+- Refactored the TCP server into smaller, single-purpose methods.
+- Improved maintainability without changing runtime behavior.

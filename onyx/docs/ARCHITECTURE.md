@@ -187,3 +187,53 @@ After accepting a TCP connection, Ember reads raw bytes from the `TcpStream`.
 - Dynamically sized buffers.
 - Support multiple reads for larger requests.
 - Handle partial reads correctly.
+
+## Phase 1.4 – Writing Responses
+
+The server can now complete a full TCP request-response cycle.
+
+### Current Flow
+
+1. Bind TCP listener.
+2. Accept client connection.
+3. Read incoming bytes.
+4. Send a valid HTTP response.
+5. Close the connection.
+
+### Design Decisions
+
+- Responses are currently hardcoded.
+- HTTP parsing has intentionally not started yet.
+- The focus remains on validating the transport layer before building protocol abstractions.
+
+### Future Work
+
+- Parse the incoming HTTP request.
+- Replace hardcoded responses with `Response` objects.
+- Introduce a response builder.
+
+## TCP Server Refactoring
+
+The TCP server implementation has been refactored into smaller methods following the Single Responsibility Principle (SRP).
+
+### Current Structure
+
+Server
+
+- bind()
+- accept_connection()
+- read_request()
+- write_response()
+- run()
+
+### Design Rationale
+
+Each method has one clearly defined responsibility:
+
+- `bind()` opens the listening socket.
+- `accept_connection()` accepts a client connection.
+- `read_request()` reads raw bytes and converts them to text.
+- `write_response()` sends an HTTP response.
+- `run()` orchestrates the overall server lifecycle.
+
+This structure improves readability, testing, and future extensibility.
