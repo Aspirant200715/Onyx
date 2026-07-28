@@ -1,4 +1,7 @@
-use std::net::TcpListener;
+use std::{
+    io::Read,
+    net::TcpListener,
+};
 
 use crate::error::EmberError;
 
@@ -31,14 +34,29 @@ impl Server {
 
         println!("Ember listening on {}", self.address);
 
-        let (stream, address) = listener
-            .accept()
-            .map_err(|error| EmberError::Network(error.to_string()))?;
+        let (mut stream, address) = listener
+        .accept()
+        .map_err(|error| EmberError::Network(error.to_string()))?;
 
         println!("Connection received from {}", address);
 
-        drop(stream);
 
-        Ok(())
+        let mut buffer = [0; 1024];
+
+
+        let bytes_read = stream
+        .read(&mut buffer)
+        .map_err(|error| EmberError::Network(error.to_string()))?;
+
+        println!("Read {} bytes", bytes_read);
+
+        // Convert the received bytes into UTF-8 text.
+        let request = String::from_utf8_lossy(&buffer[..bytes_read]);
+
+        println!("RAW REQUEST");
+        println!("{}", request);
+
+
+       Ok(())
     }
 }

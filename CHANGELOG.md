@@ -23,3 +23,5 @@ All notable changes to this project will be documented in this file.
 - Introduced conversion from I/O errors to `EmberError`.
 - Server now accepts incoming TCP connections.
 - Initial runnable networking example completed.
+- Added TCP stream reading support.
+- Display raw HTTP requests received from clients.

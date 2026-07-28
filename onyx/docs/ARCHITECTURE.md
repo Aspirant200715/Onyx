@@ -163,3 +163,27 @@ The server can now:
 At this stage, the framework validates the transport layer only. No application protocol (HTTP) is interpreted yet.
 
 This layered approach intentionally separates transport concerns from protocol concerns, making the architecture easier to extend and test.
+
+## Reading TCP Streams
+
+After accepting a TCP connection, Ember reads raw bytes from the `TcpStream`.
+
+### Current Flow
+
+1. Accept connection.
+2. Allocate a fixed-size buffer.
+3. Read bytes into the buffer.
+4. Convert the received bytes into UTF-8 text.
+5. Display the raw HTTP request.
+
+### Design Decisions
+
+- Use a fixed-size buffer initially for simplicity.
+- Read only a single request.
+- Delay HTTP parsing until Phase 2.
+
+### Future Improvements
+
+- Dynamically sized buffers.
+- Support multiple reads for larger requests.
+- Handle partial reads correctly.
