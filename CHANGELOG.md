@@ -19,3 +19,7 @@ All notable changes to this project will be documented in this file.
 - Defined core engineering principles for the framework.
 - Introduced the `EmberError` enum.
 - Documented Ember's error handling strategy.
+- Added initial TCP binding support to `Server`.
+- Introduced conversion from I/O errors to `EmberError`.
+- Server now accepts incoming TCP connections.
+- Initial runnable networking example completed.

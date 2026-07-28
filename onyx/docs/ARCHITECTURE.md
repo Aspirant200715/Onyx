@@ -133,3 +133,33 @@ Initial variants include:
 - `Network`
 
 As the framework grows, additional error variants will be added while preserving a consistent error handling strategy.
+
+## TCP Layer
+
+The first networking capability added to Ember is the ability to bind a TCP listener.
+
+At this stage, the framework only opens a listening socket. It does not yet accept incoming connections.
+
+### Design Decisions
+
+- Use Rust's standard library (`std::net::TcpListener`) for the synchronous implementation.
+- Return `Result<TcpListener, EmberError>` to expose framework-specific errors.
+- Keep the listener separate from the `Server` struct until successful binding occurs.
+
+### Future Work
+
+- Accept incoming connections.
+- Read bytes from clients.
+- Build the HTTP layer on top of the TCP stream.
+
+## Phase 1.2 Summary
+
+The server can now:
+
+- Bind to a TCP address.
+- Accept a client connection.
+- Retrieve the client's socket address.
+
+At this stage, the framework validates the transport layer only. No application protocol (HTTP) is interpreted yet.
+
+This layered approach intentionally separates transport concerns from protocol concerns, making the architecture easier to extend and test.
