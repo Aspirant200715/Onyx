@@ -5,3 +5,4 @@ pub mod parser;
 pub mod method;
 pub mod version;
 pub mod request;
+pub mod headers;

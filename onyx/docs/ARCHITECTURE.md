@@ -305,3 +305,19 @@ Added the first `Request` type to represent parsed HTTP requests.
 - Use enums for protocol-defined values (`Method`, `HttpVersion`).
 - Use `String` for request paths because the set of possible paths is unbounded.
 - Parse the request once and pass structured data to the rest of the framework.
+
+## Phase 2.5 – HTTP Header Parsing
+
+Added support for parsing HTTP headers into structured `Header` objects.
+
+### Responsibilities
+
+- Parse individual header lines.
+- Collect all request headers.
+- Store headers inside the `Request` type.
+
+### Design Decisions
+
+- Introduce a dedicated `Header` struct instead of tuples.
+- Use `Vec<Header>` to support any number of request headers.
+- Use `split_once(':')` to correctly separate header names from values.

@@ -3,6 +3,7 @@ use crate::
 {method::Method,
 version::HttpVersion,
 request::Request,
+headers::Header,
 };
 pub struct HttpParser;
 
@@ -86,7 +87,26 @@ impl HttpParser {
         method,
         path,
         version,
+        headers: Self::parse_headers(request),
     })
+  }
+
+  pub fn parse_header(line: &str) -> Option<Header> {
+    let (name, value) = line.split_once(':')?;
+
+    Some(Header {
+        name: name.trim().to_string(),
+        value: value.trim().to_string(),
+    })
+ }
+ 
+ pub fn parse_headers(request: &str) -> Vec<Header> {
+    request
+        .lines()
+        .skip(1)
+        .take_while(|line| !line.is_empty())
+        .filter_map(Self::parse_header)
+        .collect()
   }
 }
 
@@ -156,4 +176,25 @@ fn parses_complete_request() {
     assert_eq!(request.method, Method::Get);
     assert_eq!(request.path, "/users");
     assert_eq!(request.version, HttpVersion::Http11);
+    assert_eq!(request.headers.len(), 1);
+    assert_eq!(request.headers[0].name, "Host");
+}
+
+#[test]
+fn parses_headers() {
+    let raw = "\
+GET / HTTP/1.1\r\n\
+Host: localhost\r\n\
+User-Agent: Ember\r\n\
+\r\n";
+
+    let headers = HttpParser::parse_headers(raw);
+
+    assert_eq!(headers.len(), 2);
+
+    assert_eq!(headers[0].name, "Host");
+    assert_eq!(headers[0].value, "localhost");
+
+    assert_eq!(headers[1].name, "User-Agent");
+    assert_eq!(headers[1].value, "Ember");
 }

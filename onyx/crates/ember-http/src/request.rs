@@ -1,6 +1,7 @@
 use crate::{
     method::Method,
     version::HttpVersion,
+    headers::Header,
 };
 
 ///Http request identification and creation
@@ -9,5 +10,6 @@ pub struct Request {
     pub method: Method,
     pub path: String,
     pub version: HttpVersion,
+    pub headers: Vec<Header>,
 }
 

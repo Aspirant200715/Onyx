@@ -39,3 +39,7 @@ All notable changes to this project will be documented in this file.
 - Added request path parsing.
 - Added complete request-line parsing.
 - Added unit tests for `Request` parsing.
+- Added the `Header` struct.
+- Added HTTP header parsing.
+- Added header storage to the `Request` type.
+- Added unit tests for header parsing.
