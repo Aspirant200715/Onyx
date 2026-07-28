@@ -1,8 +1,4 @@
-use crate::{
-    method::Method,
-    version::HttpVersion,
-    headers::Header,
-};
+use crate::{headers::Header, method::Method, version::HttpVersion};
 
 ///Http request identification and creation
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12,4 +8,3 @@ pub struct Request {
     pub version: HttpVersion,
     pub headers: Vec<Header>,
 }
-

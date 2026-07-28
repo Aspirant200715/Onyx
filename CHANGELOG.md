@@ -43,3 +43,6 @@ All notable changes to this project will be documented in this file.
 - Added HTTP header parsing.
 - Added header storage to the `Request` type.
 - Added unit tests for header parsing.
+- Replaced `Option`-based HTTP parsing with `Result`.
+- Added the `ParserError` enum.
+- Improved parser diagnostics for malformed requests.

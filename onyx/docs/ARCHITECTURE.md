@@ -321,3 +321,19 @@ Added support for parsing HTTP headers into structured `Header` objects.
 - Introduce a dedicated `Header` struct instead of tuples.
 - Use `Vec<Header>` to support any number of request headers.
 - Use `split_once(':')` to correctly separate header names from values.
+
+## Phase 2.6 – Typed Parser Errors
+
+Replaced `Option`-based parsing with `Result<Request, ParserError>`.
+
+### Design Decisions
+
+- Introduced a dedicated `ParserError` enum.
+- Preserve the specific reason for parser failures.
+- Stop silently ignoring malformed headers.
+
+### Benefits
+
+- Better debugging.
+- Better testability.
+- Foundation for centralized framework error handling.
