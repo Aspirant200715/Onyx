@@ -361,3 +361,20 @@ The HTTP parser has been reorganized into smaller modules.
 - Better readability.
 - Easier testing.
 - Easier long-term maintenance.
+
+## Phase 3.1 – HTTP Status Codes
+
+Introduced the `StatusCode` enum to represent standard HTTP response codes.
+
+### Design Decisions
+
+- Represent status codes as a strongly typed enum instead of raw integers.
+- Expose helper methods for the numeric code and standard reason phrase.
+- Add new status codes incrementally as framework features require them.
+
+### Benefits
+
+- Compile-time type safety.
+- Easier pattern matching.
+- Eliminates magic numbers throughout the framework.
+

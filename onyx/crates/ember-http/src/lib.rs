@@ -7,3 +7,4 @@ pub mod method;
 pub mod request;
 pub mod parser;
 pub mod version;
+pub mod status;

@@ -49,3 +49,7 @@ All notable changes to this project will be documented in this file.
 - Refactored the HTTP parser into multiple focused modules.
 - Improved separation of concerns within `ember-http`.
 - Preserved the public `HttpParser` API while simplifying internal organization.
+- Added the `StatusCode` enum.
+- Added numeric status code conversion.
+- Added HTTP reason phrase support.
+- Added unit tests for status codes.
