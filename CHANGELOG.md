@@ -68,3 +68,6 @@ All notable changes to this project will be documented in this file.
 - Added the `Route` type.
 - Added the `Handler` type alias.
 - Added unit tests for route creation.
+- Added `Router` type.
+- Added route registration methods (`get`, `post`, `put`, `delete`).
+- Added router unit tests.

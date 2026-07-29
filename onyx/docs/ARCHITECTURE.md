@@ -548,3 +548,19 @@ Introduced the `Route` abstraction.
 - Strongly typed route representation.
 - Clear separation between routing and HTTP protocol types.
 - Foundation for the router implementation.
+
+## Phase 4.3 – Router
+
+Implemented the `Router` abstraction.
+
+### Responsibilities
+
+- Own all registered routes.
+- Provide an ergonomic API for route registration.
+- Hide the underlying storage implementation.
+
+### Design Decisions
+
+- Store routes internally in a `Vec<Route>`.
+- Expose registration methods for common HTTP methods.
+- Return route slices (`&[Route]`) instead of exposing the internal vector.
