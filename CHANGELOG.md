@@ -65,3 +65,6 @@ All notable changes to this project will be documented in this file.
 - Added serialization unit tests.
 - Replaced hardcoded HTTP response strings with the `Response` abstraction.
 - Integrated response serialization into the TCP server.
+- Added the `Route` type.
+- Added the `Handler` type alias.
+- Added unit tests for route creation.

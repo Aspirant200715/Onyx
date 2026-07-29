@@ -491,3 +491,60 @@ ember-core
 - Strong separation between networking and HTTP.
 - Strongly typed protocol representation.
 - Easy extension for routing and middleware.
+
+# Phase 4.1 – Router Architecture
+
+## Goal
+
+Design the routing system before implementing it.
+
+### Responsibilities
+
+Router
+
+- Register routes.
+- Match incoming requests.
+- Dispatch the matching handler.
+
+Route
+
+- HTTP method.
+- URL path.
+- Handler function.
+
+### Design Decisions
+
+- Place routing inside `ember-core`, not `ember-http`.
+- Store routes as a collection of `Route` objects.
+- Identify routes using both the HTTP method and path.
+- Begin with `Vec<Route>` for simplicity before introducing more advanced data structures.
+
+### Future Improvements
+
+- Dynamic routes.
+- Nested routers.
+- Route groups.
+- Middleware.
+- Radix tree optimization.
+
+## Phase 4.2 – Route Type
+
+Introduced the `Route` abstraction.
+
+### Responsibilities
+
+- Store the HTTP method.
+- Store the route path.
+- Store the handler function.
+
+### Design Decisions
+
+- Keep routing logic inside `ember-core`.
+- Represent handlers using a function pointer type alias.
+- Provide a constructor for ergonomic route creation.
+
+### Benefits
+
+- Strongly typed route representation.
+- Clear separation between routing and HTTP protocol types.
+- Foundation for the router implementation.
