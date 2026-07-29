@@ -1,6 +1,7 @@
 use crate::route::{Handler, Route};
 
 use ember_http::method::Method;
+use ember_http::request::Request;
 
 /// Stores all registered application routes.
 pub struct Router {
@@ -62,6 +63,16 @@ impl Router {
         ));
     }
 
+    pub fn find(
+        &self,
+        request: &Request,
+    ) -> Option<&Route> {
+        self.routes.iter().find(|route| {
+            route.method == request.method
+                && route.path == request.path
+        })
+    }
+
     pub fn route_count(&self) -> usize {
         self.routes.len()
     }
@@ -79,6 +90,8 @@ mod tests {
         request::Request,
         response::Response,
         status::StatusCode,
+        version::HttpVersion,
+        headers::Header,
     };
 
     fn home(_: Request) -> Response {
@@ -98,5 +111,41 @@ mod tests {
 
         assert_eq!(route.method, Method::Get);
         assert_eq!(route.path, "/");
+  }
+
+    #[test]
+    fn finds_matching_route() {
+        let mut router = Router::new();
+
+        router.get("/", home);
+
+        let request = Request {
+            method: Method::Get,
+            path: "/".into(),
+            version: HttpVersion::Http11,
+            headers: Vec::<Header>::new(),
+        };
+
+        let route = router.find(&request);
+
+        assert!(route.is_some());
+    }
+
+    #[test]
+    fn returns_none_for_unknown_route() {
+        let mut router = Router::new();
+
+        router.get("/", home);
+
+        let request = Request {
+            method: Method::Get,
+            path: "/unknown".into(),
+            version: HttpVersion::Http11,
+            headers: Vec::<Header>::new(),
+        };
+
+        let route = router.find(&request);
+
+        assert!(route.is_none());
     }
 }

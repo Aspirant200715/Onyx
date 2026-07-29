@@ -140,12 +140,6 @@ The first networking capability added to Ember is the ability to bind a TCP list
 
 At this stage, the framework only opens a listening socket. It does not yet accept incoming connections.
 
-### Design Decisions
-
-- Use Rust's standard library (`std::net::TcpListener`) for the synchronous implementation.
-- Return `Result<TcpListener, EmberError>` to expose framework-specific errors.
-- Keep the listener separate from the `Server` struct until successful binding occurs.
-
 ### Future Work
 
 - Accept incoming connections.
@@ -176,12 +170,6 @@ After accepting a TCP connection, Ember reads raw bytes from the `TcpStream`.
 4. Convert the received bytes into UTF-8 text.
 5. Display the raw HTTP request.
 
-### Design Decisions
-
-- Use a fixed-size buffer initially for simplicity.
-- Read only a single request.
-- Delay HTTP parsing until Phase 2.
-
 ### Future Improvements
 
 - Dynamically sized buffers.
@@ -199,12 +187,6 @@ The server can now complete a full TCP request-response cycle.
 3. Read incoming bytes.
 4. Send a valid HTTP response.
 5. Close the connection.
-
-### Design Decisions
-
-- Responses are currently hardcoded.
-- HTTP parsing has intentionally not started yet.
-- The focus remains on validating the transport layer before building protocol abstractions.
 
 ### Future Work
 
@@ -226,18 +208,6 @@ Server
 - write_response()
 - run()
 
-### Design Rationale
-
-Each method has one clearly defined responsibility:
-
-- `bind()` opens the listening socket.
-- `accept_connection()` accepts a client connection.
-- `read_request()` reads raw bytes and converts them to text.
-- `write_response()` sends an HTTP response.
-- `run()` orchestrates the overall server lifecycle.
-
-This structure improves readability, testing, and future extensibility.
-
 ## Phase 2 – HTTP Parsing
 
 The HTTP parser is implemented in the `ember-http` crate to separate protocol handling from server runtime responsibilities.
@@ -252,21 +222,9 @@ GET /users HTTP/1.1
 
 No headers or body are parsed yet.
 
-### Design Decisions
-
-- Introduce a dedicated `HttpParser` type.
-- Return `Option<&str>` to safely handle malformed or empty requests.
-- Build the parser incrementally, validating each stage with unit tests before adding new protocol features.
-
 ## Phase 2.2 – HTTP Methods
 
 Added a strongly typed `Method` enum to represent supported HTTP request methods.
-
-### Design Decisions
-
-- Store methods as an enum rather than strings.
-- Return `Option<Method>` while the parser is still under construction.
-- Keep method parsing separate from path and version parsing.
 
 ### Benefits
 
@@ -277,12 +235,6 @@ Added a strongly typed `Method` enum to represent supported HTTP request methods
 ## Phase 2.3 – HTTP Version Parsing
 
 Added a strongly typed `HttpVersion` enum.
-
-### Design Decisions
-
-- Represent protocol versions as an enum instead of strings.
-- Keep version parsing independent of method and path parsing.
-- Return `Option<HttpVersion>` until parser error handling is introduced.
 
 ### Benefits
 
@@ -300,12 +252,6 @@ Added the first `Request` type to represent parsed HTTP requests.
 - Store the request path.
 - Store the HTTP version.
 
-### Design Decisions
-
-- Use enums for protocol-defined values (`Method`, `HttpVersion`).
-- Use `String` for request paths because the set of possible paths is unbounded.
-- Parse the request once and pass structured data to the rest of the framework.
-
 ## Phase 2.5 – HTTP Header Parsing
 
 Added support for parsing HTTP headers into structured `Header` objects.
@@ -316,21 +262,9 @@ Added support for parsing HTTP headers into structured `Header` objects.
 - Collect all request headers.
 - Store headers inside the `Request` type.
 
-### Design Decisions
-
-- Introduce a dedicated `Header` struct instead of tuples.
-- Use `Vec<Header>` to support any number of request headers.
-- Use `split_once(':')` to correctly separate header names from values.
-
 ## Phase 2.6 – Typed Parser Errors
 
 Replaced `Option`-based parsing with `Result<Request, ParserError>`.
-
-### Design Decisions
-
-- Introduced a dedicated `ParserError` enum.
-- Preserve the specific reason for parser failures.
-- Stop silently ignoring malformed headers.
 
 ### Benefits
 
@@ -349,12 +283,6 @@ The HTTP parser has been reorganized into smaller modules.
 - `request.rs` – Assemble a complete `Request`.
 - `mod.rs` – Expose the parser's public API.
 
-### Design Decisions
-
-- Keep each parser module focused on one responsibility.
-- Hide implementation details behind `HttpParser`.
-- Make future protocol extensions easy to integrate.
-
 ### Benefits
 
 - Smaller files.
@@ -365,12 +293,6 @@ The HTTP parser has been reorganized into smaller modules.
 ## Phase 3.1 – HTTP Status Codes
 
 Introduced the `StatusCode` enum to represent standard HTTP response codes.
-
-### Design Decisions
-
-- Represent status codes as a strongly typed enum instead of raw integers.
-- Expose helper methods for the numeric code and standard reason phrase.
-- Add new status codes incrementally as framework features require them.
 
 ### Benefits
 
@@ -388,12 +310,6 @@ Added the `Response` type to represent outgoing HTTP responses.
 - Store response headers.
 - Store the response body.
 
-### Design Decisions
-
-- Use the existing `Header` type for consistency.
-- Use `StatusCode` instead of raw integers.
-- Keep the body as `String` initially; introduce a dedicated `Body` type later.
-
 ### Benefits
 
 - Strongly typed response model.
@@ -409,12 +325,6 @@ Added a fluent builder API to `Response`.
 - `header()`
 - `body()`
 - `status()`
-
-### Design Decisions
-
-- Builder methods consume and return `Self`.
-- Accept `impl Into<String>` for ergonomic APIs.
-- Keep `Response` immutable from the caller's perspective while allowing fluent construction.
 
 ### Benefits
 
@@ -434,21 +344,9 @@ Added response serialization support.
 - Automatically add `Content-Length`.
 - Separate headers from the body using the required blank line.
 
-### Design Decisions
-
-- Serialization is implemented on `Response`.
-- The TCP layer only writes bytes and remains HTTP-agnostic.
-- The framework automatically manages protocol-specific details such as `Content-Length`.
-
 ## Phase 3.5 – TCP Integration
 
 Integrated the `Response` system into the TCP server.
-
-### Design Decisions
-
-- The TCP layer is responsible only for transmitting bytes.
-- `Response` owns all HTTP formatting and serialization logic.
-- Handlers and future routers will return `Response` objects instead of raw byte strings.
 
 ### Benefits
 
@@ -512,13 +410,6 @@ Route
 - URL path.
 - Handler function.
 
-### Design Decisions
-
-- Place routing inside `ember-core`, not `ember-http`.
-- Store routes as a collection of `Route` objects.
-- Identify routes using both the HTTP method and path.
-- Begin with `Vec<Route>` for simplicity before introducing more advanced data structures.
-
 ### Future Improvements
 
 - Dynamic routes.
@@ -537,12 +428,6 @@ Introduced the `Route` abstraction.
 - Store the route path.
 - Store the handler function.
 
-### Design Decisions
-
-- Keep routing logic inside `ember-core`.
-- Represent handlers using a function pointer type alias.
-- Provide a constructor for ergonomic route creation.
-
 ### Benefits
 
 - Strongly typed route representation.
@@ -559,8 +444,16 @@ Implemented the `Router` abstraction.
 - Provide an ergonomic API for route registration.
 - Hide the underlying storage implementation.
 
-### Design Decisions
+## Phase 4.4 – Route Matching
 
-- Store routes internally in a `Vec<Route>`.
-- Expose registration methods for common HTTP methods.
-- Return route slices (`&[Route]`) instead of exposing the internal vector.
+### Added
+
+- Route lookup using method and path.
+- Borrow-based matching (`&Request` → `Option<&Route>`).
+
+### Complexity
+
+Current implementation uses linear search (`O(n)`).
+
+Future versions may replace the internal storage with a radix tree while preserving the same public API.
+
