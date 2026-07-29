@@ -3,6 +3,11 @@ use std::{
     net::{SocketAddr, TcpListener, TcpStream},
 };
 
+use ember_http::{
+    response::Response,
+    status::StatusCode,
+};
+
 use crate::error::EmberError;
 
 pub struct Server {
@@ -30,19 +35,37 @@ impl Server {
     }
 
     pub fn run(&self) -> Result<(), EmberError> {
-    let listener = self.bind()?;
+        let listener = self.bind()?;
 
-    println!("Ember listening on {}", self.address);
-    let (mut stream, address) = self.accept_connection(&listener)?;
-    println!("Connection received from {}", address);
-    let request = self.read_request(&mut stream)?;
-    println!("RAW REQUEST");
-    println!("{}", request);
-    self.write_response(&mut stream, 200, "Welcome to Ember!")?;
-    println!("Response sent successfully.");
-    Ok(())
-  }
-
+        println!("Ember listening on {}", self.address);
+        
+        loop {
+            match self.accept_connection(&listener) {
+                Ok((mut stream, address)) => {
+                    println!("Connection received from {}", address);
+                    
+                    match self.read_request(&mut stream) {
+                        Ok(request) => {
+                            println!("RAW REQUEST");
+                            println!("{}", request);
+                            if let Err(e) = self.write_response(&mut stream, StatusCode::Ok, "Welcome to Onyx!") {
+                                eprintln!("Failed to send response: {:?}", e);
+                            } else {
+                                println!("Response sent successfully.");
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!("Error reading request: {:?}", e);
+                        }
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Failed to accept connection: {:?}", e);
+                }
+            }
+        }
+    }
+    
     fn accept_connection(
         &self,
         listener: &TcpListener,
@@ -69,18 +92,19 @@ impl Server {
     fn write_response(
         &self,
         stream: &mut TcpStream,
-        status_code: u16,
-        content: &str,
+        status: StatusCode,
+        body: &str,
     ) -> Result<(), EmberError> {
-        let response = format!(
-            "HTTP/1.1 {} OK\r\nContent-Length: {}\r\n\r\n{}",
-            status_code,
-            content.len(),
-            content
-        );
+        let response = Response::new(status)
+            .header("Content-Type", "text/plain")
+            .header("Server", "Ember")
+            .body(body);
 
-        stream
-            .write_all(response.as_bytes())
-            .map_err(|error| EmberError::Network(error.to_string()))
+        let bytes = response.serialize();
+
+        stream.write_all(&bytes)
+            .map_err(|error| EmberError::Network(error.to_string()))?;
+
+        Ok(())
     }
 }

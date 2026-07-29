@@ -439,3 +439,19 @@ Added response serialization support.
 - Serialization is implemented on `Response`.
 - The TCP layer only writes bytes and remains HTTP-agnostic.
 - The framework automatically manages protocol-specific details such as `Content-Length`.
+
+## Phase 3.5 – TCP Integration
+
+Integrated the `Response` system into the TCP server.
+
+### Design Decisions
+
+- The TCP layer is responsible only for transmitting bytes.
+- `Response` owns all HTTP formatting and serialization logic.
+- Handlers and future routers will return `Response` objects instead of raw byte strings.
+
+### Benefits
+
+- Clear separation of concerns.
+- Easier testing.
+- Prepares the framework for routing and middleware.

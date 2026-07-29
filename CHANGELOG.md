@@ -63,3 +63,5 @@ All notable changes to this project will be documented in this file.
 - Automatically generates the status line.
 - Automatically includes `Content-Length`.
 - Added serialization unit tests.
+- Replaced hardcoded HTTP response strings with the `Response` abstraction.
+- Integrated response serialization into the TCP server.
