@@ -455,3 +455,39 @@ Integrated the `Response` system into the TCP server.
 - Clear separation of concerns.
 - Easier testing.
 - Prepares the framework for routing and middleware.
+
+# Phase 3 – HTTP Response System
+
+## Overview
+
+Implemented a complete HTTP response system for Ember.
+
+### Components
+
+- StatusCode
+- Response
+- Response Builder
+- Response Serialization
+
+### Responsibilities
+
+ember-http
+
+- Parse HTTP requests.
+- Represent HTTP requests.
+- Represent HTTP responses.
+- Serialize HTTP responses.
+
+ember-core
+
+- Accept TCP connections.
+- Read incoming bytes.
+- Parse requests.
+- Produce responses.
+- Send serialized bytes.
+
+### Benefits
+
+- Strong separation between networking and HTTP.
+- Strongly typed protocol representation.
+- Easy extension for routing and middleware.
