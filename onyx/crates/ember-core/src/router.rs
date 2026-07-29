@@ -3,6 +3,11 @@ use crate::route::{Handler, Route};
 use ember_http::method::Method;
 use ember_http::request::Request;
 
+use ember_http::{
+    response::Response,
+    status::StatusCode,
+};
+
 /// Stores all registered application routes.
 pub struct Router {
     routes: Vec<Route>,
@@ -82,6 +87,22 @@ impl Router {
     }
 }
 
+impl Router {
+    pub fn dispatch(
+        &self,
+        request: Request,
+    ) -> Response {
+        match self.find(&request) {
+            Some(route) => (route.handler)(request),
+
+            None => Response::new(StatusCode::NotFound)
+                .header("Content-Type", "text/plain")
+                .body("404 Not Found"),
+        }
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -147,5 +168,58 @@ mod tests {
         let route = router.find(&request);
 
         assert!(route.is_none());
+    }
+}
+
+#[cfg(test)]
+mod dispatch_tests {
+    use super::*;
+
+    use ember_http::{
+        headers::Header,
+        request::Request,
+        response::Response,
+        status::StatusCode,
+        version::HttpVersion,
+    };
+
+    fn home(_: Request) -> Response {
+        Response::new(StatusCode::Ok)
+            .body("Home Page")
+    }
+
+    #[test]
+    fn dispatches_matching_handler() {
+        let mut router = Router::new();
+
+        router.get("/", home);
+
+        let request = Request {
+            method: Method::Get,
+            path: "/".into(),
+            version: HttpVersion::Http11,
+            headers: Vec::<Header>::new(),
+        };
+
+        let response = router.dispatch(request);
+
+        assert_eq!(response.status, StatusCode::Ok);
+        assert_eq!(response.body, "Home Page");
+    }
+
+    #[test]
+    fn returns_404_when_not_found() {
+        let router = Router::new();
+
+        let request = Request {
+            method: Method::Get,
+            path: "/missing".into(),
+            version: HttpVersion::Http11,
+            headers: Vec::<Header>::new(),
+        };
+
+        let response = router.dispatch(request);
+
+        assert_eq!(response.status, StatusCode::NotFound);
     }
 }

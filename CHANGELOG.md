@@ -71,3 +71,6 @@ All notable changes to this project will be documented in this file.
 - Added `Router` type.
 - Added route registration methods (`get`, `post`, `put`, `delete`).
 - Added router unit tests.
+- Added `Router::dispatch()`.
+- Added automatic 404 responses.
+- Added dispatch unit tests.

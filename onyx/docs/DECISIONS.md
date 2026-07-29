@@ -127,3 +127,7 @@ This structure improves readability, testing, and future extensibility.
 - Route execution remains a separate concern.
 - Return borrowed routes to avoid unnecessary cloning.
 
+## Phase 4.5 - Handler Dispatch
+- Router owns request dispatch.
+- Handlers receive ownership of the `Request`.
+- The server no longer decides which handler to execute.

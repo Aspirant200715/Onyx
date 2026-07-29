@@ -457,3 +457,14 @@ Current implementation uses linear search (`O(n)`).
 
 Future versions may replace the internal storage with a radix tree while preserving the same public API.
 
+## Phase 4.5 – Handler Dispatch
+
+### Added
+
+- `Router::dispatch(Request) -> Response`
+
+### Responsibilities
+
+- Locate the matching route.
+- Execute the registered handler.
+- Return a 404 response if no route matches.
