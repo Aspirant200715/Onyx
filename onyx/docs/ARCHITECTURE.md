@@ -398,3 +398,26 @@ Added the `Response` type to represent outgoing HTTP responses.
 
 - Strongly typed response model.
 - Clean separation between response creation and serialization.
+
+## Phase 3.3 – Response Builder
+
+Added a fluent builder API to `Response`.
+
+### Builder Methods
+
+- `new()`
+- `header()`
+- `body()`
+- `status()`
+
+### Design Decisions
+
+- Builder methods consume and return `Self`.
+- Accept `impl Into<String>` for ergonomic APIs.
+- Keep `Response` immutable from the caller's perspective while allowing fluent construction.
+
+### Benefits
+
+- Cleaner handler code.
+- Easier response construction.
+- Foundation for future responder traits.

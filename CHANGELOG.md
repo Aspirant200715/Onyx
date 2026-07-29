@@ -56,3 +56,6 @@ All notable changes to this project will be documented in this file.
 - Added the `Response` struct.
 - Added `Response::new()`.
 - Added unit tests for response creation.
+- Added fluent builder methods for `Response`.
+- Added `header()`, `body()`, and `status()`.
+- Added unit tests for the response builder.

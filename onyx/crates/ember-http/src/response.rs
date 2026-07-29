@@ -20,6 +20,26 @@ impl Response {
             body: String::new(),
         }
     }
+
+    pub fn header(mut self, name: impl Into<String>, value: impl Into<String>) -> Self {
+    self.headers.push(Header {
+        name: name.into(),
+        value: value.into(),
+    });
+
+    self
+   }
+
+   pub fn body(mut self, body: impl Into<String>) -> Self {
+      self.body = body.into();
+      self
+   }
+ 
+
+  pub fn status(mut self, status: StatusCode) -> Self {
+    self.status = status;
+    self
+   }
 }
 
 #[cfg(test)]
@@ -44,4 +64,20 @@ mod tests {
 
         assert_eq!(response.body, "Hello Ember");
     }
+}
+
+#[test]
+fn builds_response() {
+    let response = Response::new(StatusCode::Ok)
+        .header("Content-Type", "text/plain")
+        .header("Server", "Ember")
+        .body("Hello");
+
+    assert_eq!(response.status, StatusCode::Ok);
+
+    assert_eq!(response.headers.len(), 2);
+
+    assert_eq!(response.body, "Hello");
+
+    assert_eq!(response.headers[0].name, "Content-Type");
 }
