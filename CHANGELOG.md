@@ -59,3 +59,7 @@ All notable changes to this project will be documented in this file.
 - Added fluent builder methods for `Response`.
 - Added `header()`, `body()`, and `status()`.
 - Added unit tests for the response builder.
+- Added HTTP response serialization.
+- Automatically generates the status line.
+- Automatically includes `Content-Length`.
+- Added serialization unit tests.

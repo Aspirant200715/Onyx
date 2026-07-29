@@ -421,3 +421,21 @@ Added a fluent builder API to `Response`.
 - Cleaner handler code.
 - Easier response construction.
 - Foundation for future responder traits.
+
+## Phase 3.4 – HTTP Response Serialization
+
+Added response serialization support.
+
+### Responsibilities
+
+- Convert a `Response` into valid HTTP/1.1 bytes.
+- Automatically generate the status line.
+- Serialize headers.
+- Automatically add `Content-Length`.
+- Separate headers from the body using the required blank line.
+
+### Design Decisions
+
+- Serialization is implemented on `Response`.
+- The TCP layer only writes bytes and remains HTTP-agnostic.
+- The framework automatically manages protocol-specific details such as `Content-Length`.
