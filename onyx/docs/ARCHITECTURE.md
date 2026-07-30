@@ -468,3 +468,30 @@ Future versions may replace the internal storage with a radix tree while preserv
 - Locate the matching route.
 - Execute the registered handler.
 - Return a 404 response if no route matches.
+
+## Phase 4.6 – Server and Router Integration
+
+### Overview
+
+The server no longer constructs HTTP responses directly.
+
+Instead, it delegates request handling to the router.
+
+### Request Pipeline
+
+TCP
+→ Read Request
+→ Parse HTTP
+→ Router Dispatch
+→ Handler
+→ Response
+→ Serialize
+→ Socket
+
+### Responsibilities
+
+- Server: networking
+- HttpParser: protocol parsing
+- Router: request dispatch
+- Handler: application logic
+- Response: HTTP serialization

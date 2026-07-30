@@ -5,20 +5,28 @@ use std::{
 
 use ember_http::{
     response::Response,
-    status::StatusCode,
 };
 
-use crate::error::EmberError;
+use crate::{
+    error::EmberError,
+    router::Router,
+};
 
 pub struct Server {
     address: String,
+    router: Router,
 }
 
 impl Server {
     pub fn new(address: impl Into<String>) -> Self {
         Self {
             address: address.into(),
+            router: Router::new(),
         }
+    }
+
+    pub fn router_mut(&mut self) -> &mut Router {
+        &mut self.router
     }
 
     pub fn address(&self) -> &str {
@@ -48,12 +56,25 @@ impl Server {
                         Ok(request) => {
                             println!("RAW REQUEST");
                             println!("{}", request);
-                            if let Err(e) = self.write_response(&mut stream, StatusCode::Ok, "Welcome to Onyx!") {
-                                eprintln!("Failed to send response: {:?}", e);
-                            } else {
-                                println!("Response sent successfully.");
+                            
+                            match ember_http::parser::HttpParser::parse_request(&request) {
+                                Ok(parsed_request) => {
+                                    println!("{:#?}", parsed_request);
+
+                                    let response = self.router.dispatch(parsed_request);
+
+                                    if let Err(e) = self.write_response(&mut stream, response) {
+                                        eprintln!("Failed to send response: {:?}", e);
+                                    } else {
+                                        println!("Response sent successfully.");
+                                    }
+                                }
+
+                                Err(error) => {
+                                    eprintln!("Parse error: {:?}", error);
+                                }
                             }
-                        }
+                      }
                         Err(e) => {
                             eprintln!("Error reading request: {:?}", e);
                         }
@@ -65,7 +86,7 @@ impl Server {
             }
         }
     }
-    
+
     fn accept_connection(
         &self,
         listener: &TcpListener,
@@ -89,22 +110,17 @@ impl Server {
     Ok(String::from_utf8_lossy(&buffer[..bytes_read]).to_string())
     }
 
-    fn write_response(
-        &self,
-        stream: &mut TcpStream,
-        status: StatusCode,
-        body: &str,
-    ) -> Result<(), EmberError> {
-        let response = Response::new(status)
-            .header("Content-Type", "text/plain")
-            .header("Server", "Ember")
-            .body(body);
+   fn write_response(
+    &self,
+    stream: &mut TcpStream,
+    response: Response,
+) -> Result<(), EmberError> {
+    let bytes = response.serialize();
 
-        let bytes = response.serialize();
+    stream
+        .write_all(&bytes)
+        .map_err(|error| EmberError::Network(error.to_string()))?;
 
-        stream.write_all(&bytes)
-            .map_err(|error| EmberError::Network(error.to_string()))?;
-
-        Ok(())
-    }
+    Ok(())
+  }
 }

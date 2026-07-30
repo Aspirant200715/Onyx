@@ -4,6 +4,6 @@
 
 pub mod server;
 pub mod router;
-pub mod response;
+pub mod responder;
 pub mod error;
 pub mod route;
