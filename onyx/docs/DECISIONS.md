@@ -131,3 +131,4 @@ This structure improves readability, testing, and future extensibility.
 - Router owns request dispatch.
 - Handlers receive ownership of the `Request`.
 - The server no longer decides which handler to execute.
+

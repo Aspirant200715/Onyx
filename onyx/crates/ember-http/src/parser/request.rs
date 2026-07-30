@@ -1,4 +1,5 @@
 use crate::{error::ParserError, request::Request};
+use std::collections::HashMap;
 
 use super::{
     headers::parse_headers,
@@ -17,6 +18,7 @@ impl HttpParser {
             path: parse_path(line)?,
             version: parse_version(line)?,
             headers: parse_headers(request)?,
+            params: HashMap::new(),
         })
     }
 }

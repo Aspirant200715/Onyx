@@ -675,3 +675,52 @@ Future phases will extend this component to support:
 - Single responsibility for path comparison.
 - Router remains simple.
 - Dynamic routing can be introduced without redesigning the router.
+
+## Phase 5.0 – Dynamic Route Matching
+
+### Overview
+
+The routing engine now supports dynamic path segments.
+
+A route segment beginning with `:` is treated as a wildcard during path matching.
+
+Examples:
+
+- `/users/:id`
+- `/posts/:post_id`
+
+### Design
+
+Path comparison is delegated to `PathMatcher`.
+
+Each route and request path is split into individual segments.
+
+Static segments must match exactly.
+
+Dynamic segments match any value.
+
+### Current Scope
+
+This phase only introduces dynamic route matching.
+
+Route parameters are **not yet extracted**.
+
+Parameter extraction will be implemented in the next phase.
+
+## Phase 5.1 – Request Path Parameters
+
+### Overview
+
+The `Request` type now stores route parameters.
+
+Although parameters are not yet populated during routing, the request model has been extended to support dynamic route extraction in future phases.
+
+### Design
+
+A `HashMap<String, String>` named `params` has been added to `Request`.
+
+A convenience method `param()` provides read-only access to extracted values.
+
+### Outcome
+
+The request model is now prepared for dynamic route parameter extraction without affecting the existing routing implementation.

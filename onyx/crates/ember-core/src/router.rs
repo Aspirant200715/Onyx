@@ -129,8 +129,6 @@ mod tests {
 
     use ember_http::{
         request::Request,
-        response::Response,
-        status::StatusCode,
         version::HttpVersion,
         headers::Header,
     };
@@ -164,6 +162,7 @@ mod tests {
             path: "/".into(),
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
+            params: std::collections::HashMap::new(),
         };
 
         let route = router.find(&request);
@@ -182,6 +181,7 @@ mod tests {
             path: "/unknown".into(),
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
+            params: std::collections::HashMap::new(),
         };
 
         let route = router.find(&request);
@@ -197,7 +197,6 @@ mod dispatch_tests {
     use ember_http::{
         headers::Header,
         request::Request,
-        response::Response,
         status::StatusCode,
         version::HttpVersion,
     };
@@ -221,6 +220,7 @@ mod dispatch_tests {
             path: "/".into(),
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
+            params: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);
@@ -240,6 +240,7 @@ mod dispatch_tests {
             path: "/about".into(),
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
+            params: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);
@@ -257,6 +258,7 @@ mod dispatch_tests {
             path: "/missing".into(),
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
+            params: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);
