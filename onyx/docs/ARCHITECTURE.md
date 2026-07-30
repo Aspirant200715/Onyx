@@ -634,3 +634,44 @@ Users interact with ergonomic abstractions (`Responder`), while the framework it
 This separation improves extensibility without increasing complexity inside the server or router.
 
 
+# Phase 4.8 — Path Matching Abstraction
+
+## Overview
+
+The router previously performed path comparison directly using string equality.
+
+To prepare for dynamic routes, path matching has been extracted into a dedicated `PathMatcher` component.
+
+## Motivation
+
+Separating path comparison from route management makes the routing system easier to extend while keeping the router focused on registration and dispatch.
+
+## Current Matching Strategy
+
+The initial implementation performs exact path comparison.
+
+```
+Route Path
+      │
+      ▼
+PathMatcher
+      │
+      ▼
+Exact Match (==)
+      │
+      ▼
+true / false
+```
+
+Future phases will extend this component to support:
+
+- Dynamic parameters (`:id`)
+- Wildcards (`*`)
+- Optional segments
+- Advanced matching strategies
+
+## Benefits
+
+- Single responsibility for path comparison.
+- Router remains simple.
+- Dynamic routing can be introduced without redesigning the router.

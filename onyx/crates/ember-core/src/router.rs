@@ -1,4 +1,5 @@
 use crate::route::Route;
+use crate::path_matcher::PathMatcher;
 
 use ember_http::method::Method;
 use ember_http::request::Request;
@@ -89,8 +90,11 @@ impl Router {
         request: &Request,
     ) -> Option<&Route> {
         self.routes.iter().find(|route| {
-            route.method == request.method
-                && route.path == request.path
+           route.method == request.method
+           && PathMatcher::matches(
+            &route.path,
+            &request.path,
+           )
         })
     }
 
