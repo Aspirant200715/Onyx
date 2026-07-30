@@ -1,18 +1,12 @@
 use ember_core::server::Server;
-use ember_http::{
-    request::Request,
-    response::Response,
-    status::StatusCode,
-};
+use ember_http::request::Request;
 
-fn home(_: Request) -> Response {
-    Response::new(StatusCode::Ok)
-        .body("Welcome to Onyx!")
+fn home(_: Request) -> &'static str {
+    "Hello from Onyx!"
 }
 
-fn about(_: Request) -> Response {
-    Response::new(StatusCode::Ok)
-        .body("About Onyx Framework")
+fn about(_: Request) -> String {
+    "About Onyx Framework".to_string()
 }
 
 fn main() {

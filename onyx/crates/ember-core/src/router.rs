@@ -1,4 +1,4 @@
-use crate::route::{Handler, Route};
+use crate::route::Route;
 
 use ember_http::method::Method;
 use ember_http::request::Request;
@@ -20,51 +20,67 @@ impl Router {
         }
     }
 
-    pub fn get(
+    pub fn get<F, R>(
         &mut self,
         path: impl Into<String>,
-        handler: Handler,
-    ) {
+        handler: F,
+    )
+    where
+        F: Fn(Request) -> R + Send + Sync + 'static,
+        R: crate::responder::Responder + 'static,
+    {
         self.routes.push(Route::new(
             Method::Get,
             path,
-            handler,
+            Box::new(move |req| handler(req).into_response()),
         ));
     }
 
-    pub fn post(
+    pub fn post<F, R>(
         &mut self,
         path: impl Into<String>,
-        handler: Handler,
-    ) {
+        handler: F,
+    )
+    where
+        F: Fn(Request) -> R + Send + Sync + 'static,
+        R: crate::responder::Responder + 'static,
+    {
         self.routes.push(Route::new(
             Method::Post,
             path,
-            handler,
+            Box::new(move |req| handler(req).into_response()),
         ));
     }
 
-    pub fn put(
+    pub fn put<F, R>(
         &mut self,
         path: impl Into<String>,
-        handler: Handler,
-    ) {
+        handler: F,
+    )
+    where
+        F: Fn(Request) -> R + Send + Sync + 'static,
+        R: crate::responder::Responder + 'static,
+    {
         self.routes.push(Route::new(
             Method::Put,
             path,
-            handler,
+            Box::new(move |req| handler(req).into_response()),
         ));
     }
 
-    pub fn delete(
+    pub fn delete<F, R>(
         &mut self,
         path: impl Into<String>,
-        handler: Handler,
-    ) {
+        handler: F,     
+    )
+    where
+        F: Fn(Request) -> R + Send + Sync + 'static,
+        R: crate::responder::Responder + 'static,
+    {
         self.routes.push(Route::new(
             Method::Delete,
             path,
-            handler,
+            Box::new(move |req| handler(req).into_response()),
         ));
     }
 
@@ -115,9 +131,8 @@ mod tests {
         headers::Header,
     };
 
-    fn home(_: Request) -> Response {
-        Response::new(StatusCode::Ok)
-            .body("Home")
+    fn home(_: Request) -> &'static str {
+        "Home"
     }
 
     #[test]
@@ -183,9 +198,12 @@ mod dispatch_tests {
         version::HttpVersion,
     };
 
-    fn home(_: Request) -> Response {
-        Response::new(StatusCode::Ok)
-            .body("Home Page")
+    fn home(_: Request) -> &'static str {
+        "Home Page"
+    }
+
+    fn about(_: Request) -> String {
+        "About Onyx".to_string()
     }
 
     #[test]
@@ -205,6 +223,25 @@ mod dispatch_tests {
 
         assert_eq!(response.status, StatusCode::Ok);
         assert_eq!(response.body, "Home Page");
+    }
+
+    #[test]
+    fn dispatches_string_handler() {
+        let mut router = Router::new();
+
+        router.get("/about", about);
+
+        let request = Request {
+            method: Method::Get,
+            path: "/about".into(),
+            version: HttpVersion::Http11,
+            headers: Vec::<Header>::new(),
+        };
+
+        let response = router.dispatch(request);
+
+        assert_eq!(response.status, StatusCode::Ok);
+        assert_eq!(response.body, "About Onyx");
     }
 
     #[test]

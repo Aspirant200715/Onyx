@@ -4,11 +4,9 @@ use ember_http::{
     response::Response,
 };
 
-/// Type alias for a route handler.
-pub type Handler = fn(Request) -> Response;
+pub type Handler = Box<dyn Fn(Request) -> Response + Send + Sync>;
 
 
-#[derive(Clone)]
 pub struct Route {
     pub method: Method,
     pub path: String,
@@ -48,7 +46,7 @@ mod tests {
         let route = Route::new(
             Method::Get,
             "/",
-            home,
+            Box::new(home),
         );
 
         assert_eq!(route.method, Method::Get);

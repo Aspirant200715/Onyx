@@ -74,3 +74,13 @@ All notable changes to this project will be documented in this file.
 - Added `Router::dispatch()`.
 - Added automatic 404 responses.
 - Added dispatch unit tests.
+- Introduced the `Responder` trait.
+- Added implementations for `Response`, `&'static str`, and `String`.
+- Generic route registration supporting responder return types.
+- Automatic conversion of handler return values into HTTP responses.
+
+### Improved
+
+- Simplified application handler API.
+- Removed the requirement for handlers to manually construct `Response` objects.
+- Preserved a concrete internal response type while exposing a more ergonomic public API.
