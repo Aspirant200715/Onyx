@@ -495,3 +495,24 @@ TCP
 - Router: request dispatch
 - Handler: application logic
 - Response: HTTP serialization
+
+## Phase 4.7 – Responder Abstraction
+
+### Motivation
+
+Handlers should not always be required to construct `Response` values manually.
+
+The `Responder` trait allows the framework to convert different return types into a standard HTTP response.
+
+### Initial Implementations
+
+- Response
+- &'static str
+- String
+
+Future implementations will include:
+
+- Json<T>
+- Html<T>
+- Redirect
+- File
