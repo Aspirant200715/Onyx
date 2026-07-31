@@ -1,31 +1,27 @@
-use crate::route::Route;
 use crate::path_matcher::PathMatcher;
+use crate::route::Route;
 
 use ember_http::method::Method;
 use ember_http::request::Request;
 
-use ember_http::{
-    response::Response,
-    status::StatusCode,
-};
+use ember_http::{response::Response, status::StatusCode};
 
 /// Stores all registered application routes.
 pub struct Router {
     routes: Vec<Route>,
 }
 
+impl Default for Router {
+    fn default() -> Self {
+        Self::new() 
+    }
+}
 impl Router {
     pub fn new() -> Self {
-        Self {
-            routes: Vec::new(),
-        }
+        Self { routes: Vec::new() }
     }
 
-    pub fn get<F, R>(
-        &mut self,
-        path: impl Into<String>,
-        handler: F,
-    )
+    pub fn get<F, R>(&mut self, path: impl Into<String>, handler: F)
     where
         F: Fn(Request) -> R + Send + Sync + 'static,
         R: crate::responder::Responder + 'static,
@@ -37,11 +33,7 @@ impl Router {
         ));
     }
 
-    pub fn post<F, R>(
-        &mut self,
-        path: impl Into<String>,
-        handler: F,
-    )
+    pub fn post<F, R>(&mut self, path: impl Into<String>, handler: F)
     where
         F: Fn(Request) -> R + Send + Sync + 'static,
         R: crate::responder::Responder + 'static,
@@ -53,11 +45,7 @@ impl Router {
         ));
     }
 
-    pub fn put<F, R>(
-        &mut self,
-        path: impl Into<String>,
-        handler: F,
-    )
+    pub fn put<F, R>(&mut self, path: impl Into<String>, handler: F)
     where
         F: Fn(Request) -> R + Send + Sync + 'static,
         R: crate::responder::Responder + 'static,
@@ -69,11 +57,7 @@ impl Router {
         ));
     }
 
-    pub fn delete<F, R>(
-        &mut self,
-        path: impl Into<String>,
-        handler: F,     
-    )
+    pub fn delete<F, R>(&mut self, path: impl Into<String>, handler: F)
     where
         F: Fn(Request) -> R + Send + Sync + 'static,
         R: crate::responder::Responder + 'static,
@@ -85,16 +69,9 @@ impl Router {
         ));
     }
 
-    pub fn find(
-        &self,
-        request: &Request,
-    ) -> Option<&Route> {
+    pub fn find(&self, request: &Request) -> Option<&Route> {
         self.routes.iter().find(|route| {
-           route.method == request.method
-           && PathMatcher::matches(
-            &route.path,
-            &request.path,
-           )
+            route.method == request.method && PathMatcher::matches(&route.path, &request.path)
         })
     }
 
@@ -108,21 +85,15 @@ impl Router {
 }
 
 impl Router {
-    pub fn dispatch(
-        &self,
-        request: Request,
-    ) -> Response {
+    pub fn dispatch(&self, request: Request) -> Response {
         match self.find(&request) {
             Some(route) => {
                 let mut request = request;
 
-                request.params = PathMatcher::extract_params(
-                    &route.path,
-                    &request.path,
-                );
+                request.params = PathMatcher::extract_params(&route.path, &request.path);
 
                 (route.handler)(request)
-            },
+            }
             None => Response::new(StatusCode::NotFound)
                 .header("Content-Type", "text/plain")
                 .body("404 Not Found"),
@@ -130,16 +101,11 @@ impl Router {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    use ember_http::{
-        request::Request,
-        version::HttpVersion,
-        headers::Header,
-    };
+    use ember_http::{headers::Header, request::Request, version::HttpVersion};
 
     fn home(_: Request) -> &'static str {
         "Home"
@@ -157,7 +123,7 @@ mod tests {
 
         assert_eq!(route.method, Method::Get);
         assert_eq!(route.path, "/");
-  }
+    }
 
     #[test]
     fn finds_matching_route() {
@@ -202,12 +168,7 @@ mod tests {
 mod dispatch_tests {
     use super::*;
 
-    use ember_http::{
-        headers::Header,
-        request::Request,
-        status::StatusCode,
-        version::HttpVersion,
-    };
+    use ember_http::{headers::Header, request::Request, status::StatusCode, version::HttpVersion};
 
     fn home(_: Request) -> &'static str {
         "Home Page"

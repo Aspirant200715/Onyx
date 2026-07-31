@@ -780,3 +780,41 @@ The framework now has a common extraction API that will support:
 
 without changing the router or server architecture.
 
+## Phase 6.1 – Path Extractor
+
+### Overview
+
+The first concrete implementation of the `FromRequest` trait has been completed.
+
+`Path<String>` can now construct itself directly from the route parameters stored in `Request`.
+
+### Design
+
+The extractor reads values from `Request::params`, which are populated by the router during dynamic route dispatch.
+
+Current implementation:
+
+- Supports extracting the first path parameter.
+- Returns an error if no parameters exist.
+
+### Request Flow
+
+Incoming Request
+        │
+        ▼
+Router
+        │
+        ▼
+Request.params
+        │
+        ▼
+Path<String>::from_request()
+        │
+        ▼
+Application Handler
+
+### Outcome
+
+The framework now supports request-side extraction through the `FromRequest` abstraction.
+
+Future phases will extend this design to support typed path parameters, query strings, headers and JSON payloads.

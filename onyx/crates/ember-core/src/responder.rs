@@ -1,8 +1,5 @@
 /// Represents a type that can become an HTTP response.
-use ember_http::{
-    response::Response,
-    status::StatusCode,
-};
+use ember_http::{response::Response, status::StatusCode};
 
 pub trait Responder {
     fn into_response(self) -> Response;
@@ -22,7 +19,6 @@ impl Responder for &'static str {
     }
 }
 
-
 impl Responder for String {
     fn into_response(self) -> Response {
         Response::new(StatusCode::Ok)
@@ -33,8 +29,7 @@ impl Responder for String {
 
 #[test]
 fn response_is_responder() {
-    let response = Response::new(StatusCode::Ok)
-        .body("Hello");
+    let response = Response::new(StatusCode::Ok).body("Hello");
 
     let converted = response.into_response();
 

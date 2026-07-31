@@ -84,3 +84,12 @@ All notable changes to this project will be documented in this file.
 - Simplified application handler API.
 - Removed the requirement for handlers to manually construct `Response` objects.
 - Preserved a concrete internal response type while exposing a more ergonomic public API.
+
+- Implemented `FromRequest` for `Path<String>`.
+- Added extraction from `Request::params`.
+- Added unit tests for successful and failed extraction.
+- Updated the example application to use the extractor API.
+
+### Improved
+
+- Application handlers no longer need to access `request.params` directly.

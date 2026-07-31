@@ -1,16 +1,11 @@
 use std::{
-    io::{Read,Write},
+    io::{Read, Write},
     net::{SocketAddr, TcpListener, TcpStream},
 };
 
-use ember_http::{
-    response::Response,
-};
+use ember_http::response::Response;
 
-use crate::{
-    error::EmberError,
-    router::Router,
-};
+use crate::{error::EmberError, router::Router};
 
 pub struct Server {
     address: String,
@@ -38,25 +33,24 @@ impl Server {
     }
 
     pub fn bind(&self) -> Result<TcpListener, EmberError> {
-        TcpListener::bind(&self.address)
-            .map_err(|error| EmberError::Network(error.to_string()))
+        TcpListener::bind(&self.address).map_err(|error| EmberError::Network(error.to_string()))
     }
 
     pub fn run(&self) -> Result<(), EmberError> {
         let listener = self.bind()?;
 
         println!("Ember listening on {}", self.address);
-        
+
         loop {
             match self.accept_connection(&listener) {
                 Ok((mut stream, address)) => {
                     println!("Connection received from {}", address);
-                    
+
                     match self.read_request(&mut stream) {
                         Ok(request) => {
                             println!("RAW REQUEST");
                             println!("{}", request);
-                            
+
                             match ember_http::parser::HttpParser::parse_request(&request) {
                                 Ok(parsed_request) => {
                                     println!("{:#?}", parsed_request);
@@ -74,7 +68,7 @@ impl Server {
                                     eprintln!("Parse error: {:?}", error);
                                 }
                             }
-                      }
+                        }
                         Err(e) => {
                             eprintln!("Error reading request: {:?}", e);
                         }
@@ -90,37 +84,29 @@ impl Server {
     fn accept_connection(
         &self,
         listener: &TcpListener,
-    )-> Result<(TcpStream, SocketAddr), EmberError> {
+    ) -> Result<(TcpStream, SocketAddr), EmberError> {
         listener
             .accept()
             .map_err(|error| EmberError::Network(error.to_string()))
     }
 
+    fn read_request(&self, stream: &mut TcpStream) -> Result<String, EmberError> {
+        let mut buffer = [0; 1024];
 
-    fn read_request(
-     &self,
-     stream: &mut TcpStream,
-    ) -> Result<String, EmberError> {
-    let mut buffer = [0; 1024];
+        let bytes_read = stream
+            .read(&mut buffer)
+            .map_err(|error| EmberError::Network(error.to_string()))?;
 
-    let bytes_read = stream
-        .read(&mut buffer)
-        .map_err(|error| EmberError::Network(error.to_string()))?;
-
-    Ok(String::from_utf8_lossy(&buffer[..bytes_read]).to_string())
+        Ok(String::from_utf8_lossy(&buffer[..bytes_read]).to_string())
     }
 
-   fn write_response(
-    &self,
-    stream: &mut TcpStream,
-    response: Response,
-) -> Result<(), EmberError> {
-    let bytes = response.serialize();
+    fn write_response(&self, stream: &mut TcpStream, response: Response) -> Result<(), EmberError> {
+        let bytes = response.serialize();
 
-    stream
-        .write_all(&bytes)
-        .map_err(|error| EmberError::Network(error.to_string()))?;
+        stream
+            .write_all(&bytes)
+            .map_err(|error| EmberError::Network(error.to_string()))?;
 
-    Ok(())
-  }
+        Ok(())
+    }
 }

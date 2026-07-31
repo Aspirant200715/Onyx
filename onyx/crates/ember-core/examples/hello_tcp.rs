@@ -1,6 +1,11 @@
 use ember_core::server::Server;
 use ember_http::request::Request;
 
+use ember_core::{
+    extractor::FromRequest,
+    path::Path,
+};
+
 fn home(_: Request) -> &'static str {
     "Hello from Onyx!"
 }
@@ -9,9 +14,8 @@ fn about(_: Request) -> String {
     "About Onyx Framework".to_string()
 }
 
-
 fn user(request: Request) -> String {
-    let id = request.param("id").unwrap();
+    let Path(id) = Path::<String>::from_request(&request).unwrap();
 
     format!("User ID: {}", id)
 }
@@ -25,6 +29,3 @@ fn main() {
         println!("Server error: {:?}", error);
     }
 }
-
-
-
