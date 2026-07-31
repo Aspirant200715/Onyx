@@ -724,3 +724,36 @@ A convenience method `param()` provides read-only access to extracted values.
 ### Outcome
 
 The request model is now prepared for dynamic route parameter extraction without affecting the existing routing implementation.
+
+## Phase 5.2 – Route Parameter Extraction
+
+### Overview
+
+Dynamic route parameters are now extracted during request dispatch.
+
+### Design
+
+`PathMatcher` exposes two responsibilities:
+
+- `matches()` determines whether a route matches a request path.
+- `extract_params()` collects dynamic path segments into a `HashMap`.
+
+The router populates `Request::params` immediately before invoking the handler.
+
+### Example
+
+Route:
+
+/users/:id
+
+Request:
+
+/users/42
+
+Extracted Parameters:
+
+id → "42"
+
+### Outcome
+
+Handlers can now access route parameters using `request.param("name")` without manually parsing the URL.

@@ -113,8 +113,16 @@ impl Router {
         request: Request,
     ) -> Response {
         match self.find(&request) {
-            Some(route) => (route.handler)(request),
+            Some(route) => {
+                let mut request = request;
 
+                request.params = PathMatcher::extract_params(
+                    &route.path,
+                    &request.path,
+                );
+
+                (route.handler)(request)
+            },
             None => Response::new(StatusCode::NotFound)
                 .header("Content-Type", "text/plain")
                 .body("404 Not Found"),

@@ -10,8 +10,10 @@ fn about(_: Request) -> String {
 }
 
 
-fn user(_: Request) -> &'static str {
-    "User Profile"
+fn user(request: Request) -> String {
+    let id = request.param("id").unwrap();
+
+    format!("User ID: {}", id)
 }
 fn main() {
     let mut server = Server::new("127.0.0.1:8080");
