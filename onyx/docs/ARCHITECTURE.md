@@ -757,3 +757,26 @@ id → "42"
 ### Outcome
 
 Handlers can now access route parameters using `request.param("name")` without manually parsing the URL.
+
+## Phase 6.0 – FromRequest Foundation
+
+### Overview
+
+Introduced the `FromRequest` trait as the request-side counterpart to the existing `Responder` trait.
+
+### Design
+
+`FromRequest` defines a common interface for constructing application-specific types from an HTTP request.
+
+The first extractor type, `Path<T>`, has been introduced as the foundation for future path parameter extraction.
+
+### Outcome
+
+The framework now has a common extraction API that will support:
+
+- Path extractors
+- Query extractors
+- Header extractors
+
+without changing the router or server architecture.
+

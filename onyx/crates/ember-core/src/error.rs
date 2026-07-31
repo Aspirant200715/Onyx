@@ -2,6 +2,5 @@
 #[derive(Debug)]
 pub enum EmberError {
     InvalidConfiguration(String),
-
     Network(String),
 }
