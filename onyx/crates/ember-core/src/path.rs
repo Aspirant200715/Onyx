@@ -20,12 +20,8 @@ impl FromRequest for Path<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ember_http::{headers::Header, method::Method, version::HttpVersion};
     use std::collections::HashMap;
-    use ember_http::{
-        headers::Header,
-        method::Method,
-        version::HttpVersion,
-    };
 
     #[test]
     fn creates_path_wrapper() {
@@ -46,6 +42,7 @@ mod tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params,
+            query: HashMap::new(),
         };
 
         let path = Path::<String>::from_request(&request).unwrap();
@@ -61,6 +58,7 @@ mod tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: HashMap::new(),
+            query: HashMap::new(),
         };
 
         assert!(Path::<String>::from_request(&request).is_err());

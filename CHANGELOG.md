@@ -93,3 +93,24 @@ All notable changes to this project will be documented in this file.
 ### Improved
 
 - Application handlers no longer need to access `request.params` directly.
+
+### Added
+
+- Introduced the `Query<T>` extractor wrapper.
+- Implemented the `FromRequest` interface placeholder for query extraction.
+- Exported the new `query` module.
+
+### Internal
+
+- Prepared the framework for query string parsing in the next phase.
+
+### Added
+
+- Added `query` storage to `Request`.
+- Added `Request::query()` helper.
+- Implemented query string parsing.
+- Separated URL path from query parameters during request parsing.
+
+### Improved
+
+- Request representation now distinguishes between route path and URL query parameters.

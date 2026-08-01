@@ -818,3 +818,57 @@ Application Handler
 The framework now supports request-side extraction through the `FromRequest` abstraction.
 
 Future phases will extend this design to support typed path parameters, query strings, headers and JSON payloads.
+
+## Phase 6.2 – Query Extractor Foundation
+
+### Overview
+
+Introduced the `Query<T>` extractor as part of Ember's request extraction system.
+
+The extractor follows the same design pattern as `Path<T>` and implements the `FromRequest` trait.
+
+### Design
+
+Current extractors:
+
+- Path<T>
+- Query<T>
+
+Future extractors:
+
+- Header<T>
+- Json<T>
+
+### Outcome
+
+The extraction API has been expanded while keeping a consistent interface across all extractor types.
+
+Actual query string parsing will be implemented after the request model is extended to store parsed query parameters.
+
+## Phase 6.3 – Query Parameter Storage
+
+### Overview
+
+The HTTP request model has been extended to store parsed query parameters separately from the request path.
+
+### Design
+
+Incoming request URLs are now split into two components:
+
+- Path
+- Query parameters
+
+Example:
+Request:
+/search?q=rust&page=2
+Stored as:
+
+Path:
+/search
+
+Query:
+q → rust
+page → 2
+
+### Outcome
+The request model now represents URL structure more accurately and provides the foundation required for implementing the `Query<T>` extractor.

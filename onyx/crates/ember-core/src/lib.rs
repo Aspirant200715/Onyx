@@ -6,6 +6,7 @@ pub mod error;
 pub mod extractor;
 pub mod path;
 pub mod path_matcher;
+pub mod query;
 pub mod responder;
 pub mod route;
 pub mod router;

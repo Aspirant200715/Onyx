@@ -13,7 +13,7 @@ pub struct Router {
 
 impl Default for Router {
     fn default() -> Self {
-        Self::new() 
+        Self::new()
     }
 }
 impl Router {
@@ -137,6 +137,7 @@ mod tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: std::collections::HashMap::new(),
+            query: std::collections::HashMap::new(),
         };
 
         let route = router.find(&request);
@@ -156,6 +157,7 @@ mod tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: std::collections::HashMap::new(),
+            query: std::collections::HashMap::new(),
         };
 
         let route = router.find(&request);
@@ -190,6 +192,7 @@ mod dispatch_tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: std::collections::HashMap::new(),
+            query: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);
@@ -210,6 +213,7 @@ mod dispatch_tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: std::collections::HashMap::new(),
+            query: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);
@@ -228,6 +232,7 @@ mod dispatch_tests {
             version: HttpVersion::Http11,
             headers: Vec::<Header>::new(),
             params: std::collections::HashMap::new(),
+            query: std::collections::HashMap::new(),
         };
 
         let response = router.dispatch(request);

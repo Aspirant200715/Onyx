@@ -1,7 +1,4 @@
-use crate::{
-    headers::Header,
-    status::StatusCode,
-};
+use crate::{headers::Header, status::StatusCode};
 
 /// Represents an HTTP response.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10,7 +7,6 @@ pub struct Response {
     pub headers: Vec<Header>,
     pub body: String,
 }
-
 
 impl Response {
     pub fn new(status: StatusCode) -> Self {
@@ -22,53 +18,44 @@ impl Response {
     }
 
     pub fn header(mut self, name: impl Into<String>, value: impl Into<String>) -> Self {
-    self.headers.push(Header {
-        name: name.into(),
-        value: value.into(),
-    });
+        self.headers.push(Header {
+            name: name.into(),
+            value: value.into(),
+        });
 
-    self
-   }
-
-   pub fn body(mut self, body: impl Into<String>) -> Self {
-      self.body = body.into();
-      self
-   }
- 
-
-  pub fn status(mut self, status: StatusCode) -> Self {
-    self.status = status;
-    self
-   }
-
-
-   pub fn serialize(&self) -> Vec<u8> {
-    let mut response = String::new();
-    // Status line
-    response.push_str(&format!(
-        "HTTP/1.1 {} {}\r\n",
-        self.status.as_u16(),
-        self.status.reason_phrase(),
-    ));
-    // Headers
-    for header in &self.headers {
-        response.push_str(&format!(
-            "{}: {}\r\n",
-            header.name,
-            header.value,
-        ));
+        self
     }
-    // Content-Length
-    response.push_str(&format!(
-        "Content-Length: {}\r\n",
-        self.body.len(),
-    ));
-    // Blank line
-    response.push_str("\r\n");
-    // Body
-    response.push_str(&self.body);
-    response.into_bytes()
-}
+
+    pub fn body(mut self, body: impl Into<String>) -> Self {
+        self.body = body.into();
+        self
+    }
+
+    pub fn status(mut self, status: StatusCode) -> Self {
+        self.status = status;
+        self
+    }
+
+    pub fn serialize(&self) -> Vec<u8> {
+        let mut response = String::new();
+        // Status line
+        response.push_str(&format!(
+            "HTTP/1.1 {} {}\r\n",
+            self.status.as_u16(),
+            self.status.reason_phrase(),
+        ));
+        // Headers
+        for header in &self.headers {
+            response.push_str(&format!("{}: {}\r\n", header.name, header.value,));
+        }
+        // Content-Length
+        response.push_str(&format!("Content-Length: {}\r\n", self.body.len(),));
+        // Blank line
+        response.push_str("\r\n");
+        // Body
+        response.push_str(&self.body);
+        response.into_bytes()
+    }
 }
 
 #[cfg(test)]
@@ -110,7 +97,6 @@ fn builds_response() {
 
     assert_eq!(response.headers[0].name, "Content-Type");
 }
-
 
 #[test]
 fn serializes_response() {

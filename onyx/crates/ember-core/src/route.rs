@@ -2,7 +2,6 @@ use ember_http::{method::Method, request::Request, response::Response};
 
 pub type Handler = Box<dyn Fn(Request) -> Response + Send + Sync>;
 
-
 pub struct Route {
     pub method: Method,
     pub path: String,

@@ -1,10 +1,7 @@
 use ember_core::server::Server;
 use ember_http::request::Request;
 
-use ember_core::{
-    extractor::FromRequest,
-    path::Path,
-};
+use ember_core::{extractor::FromRequest, path::Path};
 
 fn home(_: Request) -> &'static str {
     "Hello from Onyx!"
@@ -19,12 +16,23 @@ fn user(request: Request) -> String {
 
     format!("User ID: {}", id)
 }
+
+
+fn search(request: Request) -> String {
+    format!(
+        "q = {}, page = {}",
+        request.query("q").unwrap(),
+        request.query("page").unwrap(),
+    )
+}
+
 fn main() {
     let mut server = Server::new("127.0.0.1:8080");
 
     server.router_mut().get("/", home);
     server.router_mut().get("/about", about);
     server.router_mut().get("/users/:id", user);
+    server.router_mut().get("/search", search);
     if let Err(error) = server.run() {
         println!("Server error: {:?}", error);
     }
