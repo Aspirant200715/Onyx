@@ -23,20 +23,31 @@ impl EmberError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-
+#[derive(thiserror::Error, Debug, Clone, PartialEq, Eq)]
 pub enum EmberError {
+    #[error("Invalid configuration: {0}")]
     InvalidConfiguration(String),
+    #[error("{0}")]
     Network(String),
+    #[error("400 Bad Request")]
     BadRequest,
+    #[error("401 Unauthorized")]
     Unauthorized,
+    #[error("403 Forbidden")]
     Forbidden,
+    #[error("404 Not Found")]
     NotFound,
+    #[error("405 Method Not Allowed")]
     MethodNotAllowed,
+    #[error("500 Internal Server Error")]
     InternalServerError,
+    #[error("Missing path parameter: {0}")]
     MissingPathParameter(String),
+    #[error("Missing query parameter: {0}")]
     MissingQueryParameter(String),
+    #[error("Missing header: {0}")]
     MissingHeader(String),
+    #[error("JSON error: {0}")]
     Json(String),
 }
 

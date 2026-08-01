@@ -990,3 +990,29 @@ EmberError
 StatusCode
 ↓
 HTTP Response
+
+## Phase 8.4 – Error Responses
+### Overview
+Framework errors now implement the `Responder` trait.
+### Implementation
+`EmberError` determines:
+- HTTP status code
+- Response body
+The `Responder` implementation converts framework errors into standard HTTP responses without requiring manual response construction.
+
+## Phase 8.5 – Result-Based Handler Responses
+
+### Overview
+Handlers can now return `Result<T, EmberError>`.
+### Response Flow
+Handler
+↓
+Result<T, EmberError>
+↓
+Responder
+↓
+HTTP Response
+### Benefits
+- Simplifies handler implementations.
+- Eliminates manual error response construction.
+- Aligns the framework with idiomatic Rust error handling patterns.

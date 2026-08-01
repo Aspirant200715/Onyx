@@ -131,3 +131,6 @@ Prepared the extraction system for future typed extractors.
 - Added `application/json` response support.
 - Added `EmberError::status_code()`.
 - Centralized framework error to HTTP status mapping.
+- Implemented `Responder` for `EmberError`.
+- Added automatic conversion from framework errors to HTTP responses.
+- Added `Responder` implementation for `Result<T, EmberError>`.

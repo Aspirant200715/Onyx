@@ -3,6 +3,7 @@ use ember_core::server::Server;
 use ember_http::request::Request;
 
 use ember_core::{extractor::FromRequest, header::Header, path::Path, query::Query};
+use ember_core::error::EmberError;
 
 use serde::Serialize;
 
@@ -45,6 +46,14 @@ fn api(_: Request) -> Json<User> {
     })
 }
 
+fn health(_: Request) -> Result<&'static str, EmberError> {
+    Ok("Healthy")
+}
+
+fn missing(_: Request) -> Result<&'static str, EmberError> {
+    Err(EmberError::NotFound)
+}
+
 fn main() {
     let mut server = Server::new("127.0.0.1:8080");
 
@@ -54,6 +63,8 @@ fn main() {
     server.router_mut().get("/search", search);
     server.router_mut().get("/host", host);
     server.router_mut().get("/api/user", api);
+    server.router_mut().get("/health", health);
+    server.router_mut().get("/missing", missing);
     if let Err(error) = server.run() {
         println!("Server error: {:?}", error);
     }
