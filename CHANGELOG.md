@@ -125,3 +125,7 @@ Updated the example application to demonstrate header extraction.
 Refactored `Path<T>`, `Query<T>` and `Header<T>` to support deterministic lookups.
 Removed reliance on collection iteration order.
 Prepared the extraction system for future typed extractors.
+- Introduced the `Json<T>` responder.
+- Added Serde integration.
+- Added automatic JSON serialization.
+- Added `application/json` response support.

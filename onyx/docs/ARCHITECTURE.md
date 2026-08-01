@@ -939,3 +939,22 @@ Examples:
 ### Outcome
 
 The extraction system is now deterministic, predictable and suitable for future strongly typed extractors.
+
+## Phase 7.0 – JSON Responses
+### Overview
+Phase 7 introduces JSON responses through a dedicated `Json<T>` responder.
+### Design
+`Json<T>` implements the existing `Responder` trait.
+The responder serializes any `T: Serialize` into JSON using `serde_json` and automatically produces an HTTP response with the `Content-Type: application/json` header.
+### Request Flow
+Application
+↓
+Json<T>
+↓
+serde_json
+↓
+Response
+↓
+HTTP Client
+### Outcome
+The framework can now return structured JSON responses without modifying the HTTP response implementation.
