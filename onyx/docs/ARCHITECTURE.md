@@ -978,3 +978,15 @@ Framework
 EmberError
 ↓
 Application
+
+## Phase 8.2 – Error to HTTP Status Mapping
+### Overview
+Framework errors are now responsible for determining the HTTP status code returned to clients.
+### Flow
+Application Error
+↓
+EmberError
+↓
+StatusCode
+↓
+HTTP Response

@@ -141,4 +141,5 @@ Error handling is divided into two layers:
 - `ParserError` (ember-http)
 - `EmberError` (ember-core)
 `ParserError` represents HTTP parsing failures.
-`EmberError` represents framework-level failures including networking, routing, extraction and serialization.
+-`EmberError` represents framework-level failures including networking, routing, extraction and serialization.
+-`EmberError` exposes a `status_code()` method that maps each framework error to its corresponding HTTP status.

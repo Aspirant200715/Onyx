@@ -129,3 +129,5 @@ Prepared the extraction system for future typed extractors.
 - Added Serde integration.
 - Added automatic JSON serialization.
 - Added `application/json` response support.
+- Added `EmberError::status_code()`.
+- Centralized framework error to HTTP status mapping.
