@@ -134,3 +134,26 @@ Prepared the extraction system for future typed extractors.
 - Implemented `Responder` for `EmberError`.
 - Added automatic conversion from framework errors to HTTP responses.
 - Added `Responder` implementation for `Result<T, EmberError>`.
+
+# v0.1.0
+
+## Added
+
+- TCP server
+- HTTP parser
+- HTTP request model
+- HTTP response builder
+- Router
+- Dynamic routing
+- Path parameters
+- Query parameters
+- Request extractors
+- JSON responder
+- Unified error handling
+- Result-based handlers
+
+## Notes
+
+This marks the completion of Tier 1.
+
+The framework is now capable of serving dynamic HTTP applications with routing, extraction, JSON serialization and centralized error handling.
