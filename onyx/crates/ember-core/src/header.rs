@@ -17,7 +17,7 @@ impl<'a> FromRequest for Header<'a> {
     type Output = String;
     type Error = &'static str;
 
-    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error> {
+    fn extract(self, request: &Request) -> Result<Self::Output, Self::Error> {
         request
             .headers
             .iter()
@@ -34,10 +34,7 @@ mod tests {
     use std::collections::HashMap;
 
     use ember_http::{
-        headers::Header as HttpHeader,
-        method::Method,
-        request::Request,
-        version::HttpVersion,
+        headers::Header as HttpHeader, method::Method, request::Request, version::HttpVersion,
     };
 
     #[test]
@@ -46,17 +43,15 @@ mod tests {
             method: Method::Get,
             path: "/".into(),
             version: HttpVersion::Http11,
-            headers: vec![
-                HttpHeader {
-                    name: "Host".into(),
-                    value: "localhost".into(),
-                }
-            ],
+            headers: vec![HttpHeader {
+                name: "Host".into(),
+                value: "localhost".into(),
+            }],
             params: HashMap::new(),
             query: HashMap::new(),
         };
 
-        let value = Header::named("Host").from_request(&request).unwrap();
+        let value = Header::named("Host").extract(&request).unwrap();
 
         assert_eq!(value, "localhost");
     }
@@ -72,6 +67,6 @@ mod tests {
             query: HashMap::new(),
         };
 
-        assert!(Header::named("Host").from_request(&request).is_err());
+        assert!(Header::named("Host").extract(&request).is_err());
     }
 }

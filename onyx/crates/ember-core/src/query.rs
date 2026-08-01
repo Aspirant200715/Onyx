@@ -17,7 +17,7 @@ impl<'a> FromRequest for Query<'a> {
     type Output = String;
     type Error = &'static str;
 
-    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error> {
+    fn extract(self, request: &Request) -> Result<Self::Output, Self::Error> {
         if let Some(value) = request.query.get(self.name) {
             Ok(value.clone())
         } else {
@@ -44,12 +44,7 @@ mod extractor_tests {
 
     use std::collections::HashMap;
 
-    use ember_http::{
-        headers::Header,
-        method::Method,
-        request::Request,
-        version::HttpVersion,
-    };
+    use ember_http::{headers::Header, method::Method, request::Request, version::HttpVersion};
 
     #[test]
     fn extracts_first_query_parameter() {
@@ -66,7 +61,7 @@ mod extractor_tests {
             query,
         };
 
-        let value = Query::named("q").from_request(&request).unwrap();
+        let value = Query::named("q").extract(&request).unwrap();
 
         assert_eq!(value, "rust");
     }
@@ -82,6 +77,6 @@ mod extractor_tests {
             query: HashMap::new(),
         };
 
-        assert!(Query::named("q").from_request(&request).is_err());
+        assert!(Query::named("q").extract(&request).is_err());
     }
 }

@@ -958,3 +958,23 @@ Response
 HTTP Client
 ### Outcome
 The framework can now return structured JSON responses without modifying the HTTP response implementation.
+
+## Phase 8.1 – Unified Framework Error Type
+
+### Overview
+
+Introduced a unified framework error type through `EmberError`.
+
+### Layering
+
+TCP
+↓
+HTTP Parser
+↓
+ParserError
+↓
+Framework
+↓
+EmberError
+↓
+Application

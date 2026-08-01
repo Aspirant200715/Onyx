@@ -4,21 +4,16 @@ use serde::Serialize;
 #[derive(Debug, Clone)]
 pub struct Json<T>(pub T);
 
-
 use crate::responder::Responder;
 
-use ember_http::{
-    response::Response,
-    status::StatusCode,
-};
+use ember_http::{response::Response, status::StatusCode};
 
 impl<T> Responder for Json<T>
 where
     T: Serialize,
 {
     fn into_response(self) -> Response {
-        let body = serde_json::to_string(&self.0)
-            .expect("JSON serialization failed");
+        let body = serde_json::to_string(&self.0).expect("JSON serialization failed");
 
         Response::new(StatusCode::Ok)
             .header("Content-Type", "application/json")
@@ -48,10 +43,7 @@ mod tests {
         })
         .into_response();
 
-        assert_eq!(
-            response.headers[0].value,
-            "application/json",
-        );
+        assert_eq!(response.headers[0].value, "application/json",);
 
         assert!(response.body.contains("\"id\":1"));
         assert!(response.body.contains("\"name\":\"Ember\""));

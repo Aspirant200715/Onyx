@@ -135,3 +135,10 @@ This structure improves readability, testing, and future extensibility.
 The extractor reads values from `Request::query`, which is populated by the HTTP parser.
 Current implementation extracts the first available query parameter and returns it as a `String`.
 Future phases will introduce strongly typed query extraction.
+
+## Phase 8.1 – Unified Framework Error Type
+Error handling is divided into two layers:
+- `ParserError` (ember-http)
+- `EmberError` (ember-core)
+`ParserError` represents HTTP parsing failures.
+`EmberError` represents framework-level failures including networking, routing, extraction and serialization.

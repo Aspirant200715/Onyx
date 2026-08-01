@@ -1,10 +1,8 @@
+use ember_core::json::Json;
 use ember_core::server::Server;
 use ember_http::request::Request;
-use ember_core::json::Json;
 
-use ember_core::{extractor::FromRequest, path::Path,
-query::Query,
-header::Header,};
+use ember_core::{extractor::FromRequest, header::Header, path::Path, query::Query};
 
 use serde::Serialize;
 
@@ -23,23 +21,22 @@ fn about(_: Request) -> String {
 }
 
 fn user(request: Request) -> String {
-    let id = Path::named("id").from_request(&request).unwrap();
+    let id = Path::named("id").extract(&request).unwrap();
 
     format!("User ID: {}", id)
 }
 
 fn search(request: Request) -> String {
-    let query = Query::named("q").from_request(&request).unwrap();
+    let query = Query::named("q").extract(&request).unwrap();
 
     format!("Search query: {}", query)
 }
 
 fn host(request: Request) -> String {
-    let host = Header::named("Host").from_request(&request).unwrap();
+    let host = Header::named("Host").extract(&request).unwrap();
 
     format!("Host: {}", host)
 }
-
 
 fn api(_: Request) -> Json<User> {
     Json(User {

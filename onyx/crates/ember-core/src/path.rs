@@ -17,7 +17,7 @@ impl<'a> FromRequest for Path<'a> {
     type Output = String;
     type Error = &'static str;
 
-    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error> {
+    fn extract(self, request: &Request) -> Result<Self::Output, Self::Error> {
         if let Some(value) = request.params.get(self.name) {
             Ok(value.clone())
         } else {
@@ -54,7 +54,7 @@ mod tests {
             query: HashMap::new(),
         };
 
-        let id = Path::named("id").from_request(&request).unwrap();
+        let id = Path::named("id").extract(&request).unwrap();
 
         assert_eq!(id, "42");
     }
@@ -70,6 +70,6 @@ mod tests {
             query: HashMap::new(),
         };
 
-        assert!(Path::named("id").from_request(&request).is_err());
+        assert!(Path::named("id").extract(&request).is_err());
     }
 }

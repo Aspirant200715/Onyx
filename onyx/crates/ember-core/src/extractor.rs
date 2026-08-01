@@ -5,5 +5,5 @@ pub trait FromRequest {
     type Output;
     type Error;
 
-    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error>;
+    fn extract(self, request: &Request) -> Result<Self::Output, Self::Error>;
 }
