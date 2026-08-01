@@ -1,8 +1,9 @@
 use ember_http::request::Request;
 
 /// Types that can be extracted from an HTTP request.
-pub trait FromRequest: Sized {
+pub trait FromRequest {
+    type Output;
     type Error;
 
-    fn from_request(request: &Request) -> Result<Self, Self::Error>;
+    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error>;
 }

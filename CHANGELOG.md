@@ -114,3 +114,14 @@ All notable changes to this project will be documented in this file.
 ### Improved
 
 - Request representation now distinguishes between route path and URL query parameters.
+
+Implemented `FromRequest` for `Query<String>`.
+Added unit tests for query extraction.
+Updated the example application to demonstrate query extraction.
+Introduced the `Header<T>` extractor.
+Implemented `FromRequest` for `Header<String>`.
+Added unit tests for header extraction.
+Updated the example application to demonstrate header extraction.
+Refactored `Path<T>`, `Query<T>` and `Header<T>` to support deterministic lookups.
+Removed reliance on collection iteration order.
+Prepared the extraction system for future typed extractors.

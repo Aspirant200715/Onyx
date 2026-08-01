@@ -872,3 +872,70 @@ page → 2
 
 ### Outcome
 The request model now represents URL structure more accurately and provides the foundation required for implementing the `Query<T>` extractor.
+
+## Phase 6.4 – Query Extractor
+
+### Overview
+
+The `Query<T>` extractor now supports extracting query string values from an HTTP request.
+
+### Request Flow
+Incoming Request
+        │
+        ▼
+HTTP Parser
+        │
+        ▼
+Request.query
+        │
+        ▼
+Query<String>::from_request()
+        │
+        ▼
+Application Handler
+### Outcome
+The extraction pipeline now supports both path parameters and query parameters using the common `FromRequest` abstraction.
+
+## Phase 6.5 – Header Extractor
+
+### Overview
+
+The request extraction system now supports HTTP header extraction.
+
+### Design
+
+The new `Header<T>` extractor implements the `FromRequest` trait and reads values from the parsed request headers.
+
+Current extractor implementations include:
+
+- `Path<T>`
+- `Query<T>`
+- `Header<T>`
+
+All share the same extraction interface.
+
+### Outcome
+
+The framework now provides a consistent API for accessing route parameters, query parameters and request headers through the extractor system.
+
+## Phase 6.6 – Extractor API Refinement
+
+### Overview
+
+The initial extractor implementations have been refined to provide deterministic extraction.
+
+### Design
+
+Earlier implementations returned the first available value from the request.
+
+The new API performs lookups using explicit keys.
+
+Examples:
+
+- Path parameter by name
+- Query parameter by name
+- Header by name
+
+### Outcome
+
+The extraction system is now deterministic, predictable and suitable for future strongly typed extractors.

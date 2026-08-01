@@ -132,3 +132,6 @@ This structure improves readability, testing, and future extensibility.
 - Handlers receive ownership of the `Request`.
 - The server no longer decides which handler to execute.
 
+The extractor reads values from `Request::query`, which is populated by the HTTP parser.
+Current implementation extracts the first available query parameter and returns it as a `String`.
+Future phases will introduce strongly typed query extraction.

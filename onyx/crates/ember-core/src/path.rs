@@ -3,14 +3,23 @@ use ember_http::request::Request;
 
 /// Path extractor wrapper.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Path<T>(pub T);
+pub struct Path<'a> {
+    pub name: &'a str,
+}
 
-impl FromRequest for Path<String> {
+impl<'a> Path<'a> {
+    pub fn named(name: &'a str) -> Self {
+        Self { name }
+    }
+}
+
+impl<'a> FromRequest for Path<'a> {
+    type Output = String;
     type Error = &'static str;
 
-    fn from_request(request: &Request) -> Result<Self, Self::Error> {
-        if let Some((_, value)) = request.params.iter().next() {
-            Ok(Path(value.clone()))
+    fn from_request(self, request: &Request) -> Result<Self::Output, Self::Error> {
+        if let Some(value) = request.params.get(self.name) {
+            Ok(value.clone())
         } else {
             Err("No path parameter found")
         }
@@ -25,9 +34,9 @@ mod tests {
 
     #[test]
     fn creates_path_wrapper() {
-        let path = Path(String::from("42"));
+        let path = Path::named("id");
 
-        assert_eq!(path.0, "42");
+        assert_eq!(path.name, "id");
     }
 
     #[test]
@@ -45,9 +54,9 @@ mod tests {
             query: HashMap::new(),
         };
 
-        let path = Path::<String>::from_request(&request).unwrap();
+        let id = Path::named("id").from_request(&request).unwrap();
 
-        assert_eq!(path.0, "42");
+        assert_eq!(id, "42");
     }
 
     #[test]
@@ -61,6 +70,6 @@ mod tests {
             query: HashMap::new(),
         };
 
-        assert!(Path::<String>::from_request(&request).is_err());
+        assert!(Path::named("id").from_request(&request).is_err());
     }
 }
