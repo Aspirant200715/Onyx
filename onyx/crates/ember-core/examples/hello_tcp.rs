@@ -1,4 +1,5 @@
 use ember_core::json::Json;
+use ember_core::middleware::Logger;
 use ember_core::server::Server;
 use ember_http::request::Request;
 
@@ -57,6 +58,7 @@ fn missing(_: Request) -> Result<&'static str, EmberError> {
 fn main() {
     let mut server = Server::new("127.0.0.1:8080");
 
+    server.use_middleware(Logger);
     server.router_mut().get("/", home);
     server.router_mut().get("/about", about);
     server.router_mut().get("/users/:id", user);

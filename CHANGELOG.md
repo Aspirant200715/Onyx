@@ -165,3 +165,7 @@ The framework is now capable of serving dynamic HTTP applications with routing, 
 - Prepared the server for composable middleware execution.
 - Implemented middleware pipeline construction.
 - Added execution of registered middleware.
+- Added built-in `Logger` middleware.
+- Logged HTTP method and request path.
+- Logged HTTP response status.
+- Measured request processing duration.

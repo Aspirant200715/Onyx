@@ -1091,3 +1091,26 @@ Response
 ### Outcome
 The framework now supports execution of arbitrary middleware chains without modifying the router or request handlers.
 
+## Phase 9.4 – Logger Middleware
+
+### Overview
+Implemented Ember's first built-in middleware.
+### Execution Flow
+TCP
+↓
+HTTP Parser
+↓
+Logger Middleware
+↓
+Router
+↓
+Handler
+↓
+Response
+↓
+Logger
+### Responsibilities
+- Log HTTP method
+- Log request path
+- Measure request duration
+- Log response status

@@ -1,4 +1,6 @@
+pub mod logger;
 use ember_http::{request::Request, response::Response};
+pub use logger::Logger;
 use std::sync::Arc;
 
 impl Next {

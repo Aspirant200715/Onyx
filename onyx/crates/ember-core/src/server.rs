@@ -132,9 +132,7 @@ impl Server {
 
             let middleware = Arc::clone(middleware);
 
-            next = Next::from_handler(move |request| {
-                middleware.handle(request, &current)
-            });
+            next = Next::from_handler(move |request| middleware.handle(request, &current));
         }
 
         next
