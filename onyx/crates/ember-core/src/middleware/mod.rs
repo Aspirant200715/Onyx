@@ -2,6 +2,8 @@ pub mod logger;
 use ember_http::{request::Request, response::Response};
 pub use logger::Logger;
 use std::sync::Arc;
+pub mod auth;
+pub use auth::Auth;
 
 impl Next {
     pub fn from_handler<F>(handler: F) -> Self

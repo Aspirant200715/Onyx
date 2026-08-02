@@ -1114,3 +1114,33 @@ Logger
 - Log request path
 - Measure request duration
 - Log response status
+
+## Phase 9.5 – Authentication Middleware
+
+### Overview
+
+Implemented the first middleware capable of terminating the request pipeline.
+
+### Design
+
+The authentication middleware validates the `Authorization` header before forwarding the request to the remaining pipeline.
+
+If authentication fails, it immediately returns a `401 Unauthorized` response.
+
+### Pipeline
+
+Request
+
+↓
+
+Authentication
+
+├── Authorized → Next
+
+└── Unauthorized → HTTP 401
+
+### Benefits
+
+- Demonstrates short-circuit middleware execution.
+- Establishes the foundation for authentication and authorization features.
+- Shows how middleware can both inspect and control request flow.

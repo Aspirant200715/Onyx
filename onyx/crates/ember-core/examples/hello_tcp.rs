@@ -1,7 +1,7 @@
 use ember_core::json::Json;
-use ember_core::middleware::Logger;
 use ember_core::server::Server;
 use ember_http::request::Request;
+use ember_core::middleware::{Auth, Logger};
 
 use ember_core::error::EmberError;
 use ember_core::{extractor::FromRequest, header::Header, path::Path, query::Query};
@@ -59,6 +59,7 @@ fn main() {
     let mut server = Server::new("127.0.0.1:8080");
 
     server.use_middleware(Logger);
+    server.use_middleware(Auth::new("onyx"));
     server.router_mut().get("/", home);
     server.router_mut().get("/about", about);
     server.router_mut().get("/users/:id", user);

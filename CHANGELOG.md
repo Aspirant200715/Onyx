@@ -169,3 +169,6 @@ The framework is now capable of serving dynamic HTTP applications with routing, 
 - Logged HTTP method and request path.
 - Logged HTTP response status.
 - Measured request processing duration.
+- Added built-in `Auth` middleware.
+- Implemented bearer token validation.
+- Added middleware short-circuiting for unauthorized requests.
