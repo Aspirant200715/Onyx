@@ -4,6 +4,8 @@ pub use logger::Logger;
 use std::sync::Arc;
 pub mod auth;
 pub use auth::Auth;
+pub mod rate_limit;
+pub use rate_limit::RateLimiter;
 
 impl Next {
     pub fn from_handler<F>(handler: F) -> Self

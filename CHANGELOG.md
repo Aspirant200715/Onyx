@@ -172,3 +172,6 @@ The framework is now capable of serving dynamic HTTP applications with routing, 
 - Added built-in `Auth` middleware.
 - Implemented bearer token validation.
 - Added middleware short-circuiting for unauthorized requests.
+- Added `RateLimiter` middleware.
+- Implemented the Token Bucket algorithm.
+- Added HTTP 429 responses when request limits are exceeded.

@@ -1,8 +1,4 @@
-use ember_http::{
-    request::Request,
-    response::Response,
-    status::StatusCode,
-};
+use ember_http::{request::Request, response::Response, status::StatusCode};
 
 use super::{Middleware, Next};
 
@@ -20,11 +16,7 @@ impl Auth {
 }
 
 impl Middleware for Auth {
-    fn handle(
-        &self,
-        request: Request,
-        next: &Next,
-    ) -> Response {
+    fn handle(&self, request: Request, next: &Next) -> Response {
         let authorized = request
             .headers
             .iter()
@@ -47,11 +39,7 @@ mod tests {
     use super::*;
 
     use ember_http::{
-        headers::Header,
-        method::Method,
-        request::Request,
-        response::Response,
-        status::StatusCode,
+        method::Method, request::Request, response::Response, status::StatusCode,
         version::HttpVersion,
     };
 
@@ -68,10 +56,7 @@ mod tests {
             query: Default::default(),
         };
 
-        let next = Next::new(|_| {
-            Response::new(StatusCode::Ok)
-                .body("OK")
-        });
+        let next = Next::new(|_| Response::new(StatusCode::Ok).body("OK"));
 
         let response = auth.handle(request, &next);
 

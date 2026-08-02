@@ -1,7 +1,8 @@
 use ember_core::json::Json;
+use ember_core::middleware::{Auth, Logger, RateLimiter};
 use ember_core::server::Server;
 use ember_http::request::Request;
-use ember_core::middleware::{Auth, Logger};
+use std::time::Duration;
 
 use ember_core::error::EmberError;
 use ember_core::{extractor::FromRequest, header::Header, path::Path, query::Query};
@@ -60,6 +61,7 @@ fn main() {
 
     server.use_middleware(Logger);
     server.use_middleware(Auth::new("onyx"));
+    server.use_middleware(RateLimiter::new(5, Duration::from_secs(1)));
     server.router_mut().get("/", home);
     server.router_mut().get("/about", about);
     server.router_mut().get("/users/:id", user);

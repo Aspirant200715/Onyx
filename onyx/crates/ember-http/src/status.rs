@@ -10,6 +10,7 @@ pub enum StatusCode {
     Forbidden,
     NotFound,
     MethodNotAllowed,
+    TooManyRequests,
 
     InternalServerError,
 }
@@ -26,6 +27,7 @@ impl StatusCode {
             StatusCode::Forbidden => 403,
             StatusCode::NotFound => 404,
             StatusCode::MethodNotAllowed => 405,
+            StatusCode::TooManyRequests => 429,
 
             StatusCode::InternalServerError => 500,
         }
@@ -42,6 +44,7 @@ impl StatusCode {
             StatusCode::Forbidden => "Forbidden",
             StatusCode::NotFound => "Not Found",
             StatusCode::MethodNotAllowed => "Method Not Allowed",
+            StatusCode::TooManyRequests => "Too Many Requests",
 
             StatusCode::InternalServerError => "Internal Server Error",
         }

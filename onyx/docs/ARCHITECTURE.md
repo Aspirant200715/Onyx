@@ -1144,3 +1144,35 @@ Authentication
 - Demonstrates short-circuit middleware execution.
 - Establishes the foundation for authentication and authorization features.
 - Shows how middleware can both inspect and control request flow.
+
+## Phase 9.6 – Token Bucket Rate Limiting
+
+### Overview
+
+Implemented request throttling using the Token Bucket algorithm.
+
+### Design
+Each client is associated with a token bucket.
+Every request consumes one token.
+Tokens are replenished after a configurable refill interval.
+
+### Request Flow
+
+Request
+↓
+Logger
+↓
+Authentication
+↓
+Rate Limiter
+↓
+Router
+↓
+Handler
+↓
+Response
+
+### Current Implementation
+
+For Tier 2, the middleware uses a temporary global client identifier.
+Per-client buckets using the remote socket address will be introduced in a future phase.
