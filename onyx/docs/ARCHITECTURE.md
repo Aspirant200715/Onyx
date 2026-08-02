@@ -1016,3 +1016,78 @@ HTTP Response
 - Simplifies handler implementations.
 - Eliminates manual error response construction.
 - Aligns the framework with idiomatic Rust error handling patterns.
+
+## Phase 9.1 – Middleware Foundation
+
+### Overview
+
+Phase 9 introduces Ember's middleware architecture.
+Middleware provides a mechanism to intercept requests before they reach application handlers.
+### Components
+- `Middleware` trait
+- `Next` pipeline abstraction
+- Middleware registry within `Server`
+### Pipeline
+TCP
+↓
+HTTP Parser
+↓
+Middleware (planned)
+↓
+Router
+↓
+Handler
+↓
+Responder
+↓
+HTTP Response
+### Design
+Middleware execution is intentionally deferred until the next phase.
+This phase establishes the abstractions required for a composable middleware pipeline while avoiding changes to request processing.
+
+## Phase 9.2 – Middleware Pipeline
+### Overview
+The middleware infrastructure has been refactored to support composable middleware chains.
+### Pipeline
+Request
+↓
+Middleware A
+↓
+Middleware B
+↓
+Middleware C
+↓
+Router
+↓
+Handler
+↓
+Response
+
+### Benefits
+- Middleware can be chained.
+- Pipeline execution becomes composable.
+- Foundation established for logging, authentication and rate limiting.
+
+## Phase 9.3 – Middleware Engine
+### Overview
+Implemented the middleware execution engine.
+### Design
+The server now builds a middleware pipeline by composing registered middleware around the router.
+Middleware are executed in registration order.
+### Request Flow
+TCP
+↓
+HTTP Parser
+↓
+Pipeline Builder
+↓
+Middleware
+↓
+Router
+↓
+Handler
+↓
+Response
+### Outcome
+The framework now supports execution of arbitrary middleware chains without modifying the router or request handlers.
+

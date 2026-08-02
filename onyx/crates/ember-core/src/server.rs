@@ -1,8 +1,10 @@
 use std::{
     io::{Read, Write},
     net::{SocketAddr, TcpListener, TcpStream},
+    sync::Arc,
 };
 
+use crate::middleware::{Middleware, Next};
 use ember_http::response::Response;
 
 use crate::{error::EmberError, router::Router};
@@ -10,6 +12,7 @@ use crate::{error::EmberError, router::Router};
 pub struct Server {
     address: String,
     router: Router,
+    middleware: Vec<Arc<dyn Middleware>>,
 }
 
 impl Server {
@@ -17,7 +20,15 @@ impl Server {
         Self {
             address: address.into(),
             router: Router::new(),
+            middleware: Vec::new(),
         }
+    }
+
+    pub fn use_middleware<M>(&mut self, middleware: M)
+    where
+        M: Middleware + 'static,
+    {
+        self.middleware.push(Arc::new(middleware));
     }
 
     pub fn router_mut(&mut self) -> &mut Router {
@@ -55,7 +66,8 @@ impl Server {
                                 Ok(parsed_request) => {
                                     println!("{:#?}", parsed_request);
 
-                                    let response = self.router.dispatch(parsed_request);
+                                    let pipeline = self.build_pipeline();
+                                    let response = pipeline.run(parsed_request);
 
                                     if let Err(e) = self.write_response(&mut stream, response) {
                                         eprintln!("Failed to send response: {:?}", e);
@@ -108,5 +120,23 @@ impl Server {
             .map_err(|error| EmberError::Network(error.to_string()))?;
 
         Ok(())
+    }
+
+    fn build_pipeline(&self) -> Next {
+        let router = self.router.clone();
+
+        let mut next = Next::from_handler(move |request| router.dispatch(request));
+
+        for middleware in self.middleware.iter().rev() {
+            let current = next.clone();
+
+            let middleware = Arc::clone(middleware);
+
+            next = Next::from_handler(move |request| {
+                middleware.handle(request, &current)
+            });
+        }
+
+        next
     }
 }

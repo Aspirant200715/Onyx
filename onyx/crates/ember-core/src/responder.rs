@@ -20,7 +20,6 @@ impl Responder for Response {
     }
 }
 
-
 impl Responder for &'static str {
     fn into_response(self) -> Response {
         Response::new(StatusCode::Ok)
@@ -90,9 +89,7 @@ where
 
 #[test]
 fn ok_result_is_responder() {
-    let response: Response =
-        Ok::<_, EmberError>("Hello")
-            .into_response();
+    let response: Response = Ok::<_, EmberError>("Hello").into_response();
 
     assert_eq!(response.status, StatusCode::Ok);
     assert_eq!(response.body, "Hello");
@@ -100,11 +97,7 @@ fn ok_result_is_responder() {
 
 #[test]
 fn err_result_is_responder() {
-    let response: Response =
-        Err::<&'static str, EmberError>(
-            EmberError::NotFound,
-        )
-        .into_response();
+    let response: Response = Err::<&'static str, EmberError>(EmberError::NotFound).into_response();
 
     assert_eq!(response.status, StatusCode::NotFound);
 }

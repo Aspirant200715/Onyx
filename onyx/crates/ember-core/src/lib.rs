@@ -6,6 +6,7 @@ pub mod error;
 pub mod extractor;
 pub mod header;
 pub mod json;
+pub mod middleware;
 pub mod path;
 pub mod path_matcher;
 pub mod query;

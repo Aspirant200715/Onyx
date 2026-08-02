@@ -1,7 +1,10 @@
 use ember_http::{method::Method, request::Request, response::Response};
 
-pub type Handler = Box<dyn Fn(Request) -> Response + Send + Sync>;
+use std::sync::Arc;
 
+pub type Handler = Arc<dyn Fn(Request) -> Response + Send + Sync>;
+
+#[derive(Clone)]
 pub struct Route {
     pub method: Method,
     pub path: String,
@@ -29,7 +32,7 @@ mod tests {
 
     #[test]
     fn creates_route() {
-        let route = Route::new(Method::Get, "/", Box::new(home));
+        let route = Route::new(Method::Get, "/", Arc::new(home));
 
         assert_eq!(route.method, Method::Get);
         assert_eq!(route.path, "/");

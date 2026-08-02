@@ -6,7 +6,10 @@ use ember_http::request::Request;
 
 use ember_http::{response::Response, status::StatusCode};
 
+use std::sync::Arc;
+
 /// Stores all registered application routes.
+#[derive(Clone)]
 pub struct Router {
     routes: Vec<Route>,
 }
@@ -29,7 +32,7 @@ impl Router {
         self.routes.push(Route::new(
             Method::Get,
             path,
-            Box::new(move |req| handler(req).into_response()),
+            Arc::new(move |req| handler(req).into_response()),
         ));
     }
 
@@ -41,7 +44,7 @@ impl Router {
         self.routes.push(Route::new(
             Method::Post,
             path,
-            Box::new(move |req| handler(req).into_response()),
+            Arc::new(move |req| handler(req).into_response()),
         ));
     }
 
@@ -53,7 +56,7 @@ impl Router {
         self.routes.push(Route::new(
             Method::Put,
             path,
-            Box::new(move |req| handler(req).into_response()),
+            Arc::new(move |req| handler(req).into_response()),
         ));
     }
 
@@ -65,7 +68,7 @@ impl Router {
         self.routes.push(Route::new(
             Method::Delete,
             path,
-            Box::new(move |req| handler(req).into_response()),
+            Arc::new(move |req| handler(req).into_response()),
         ));
     }
 

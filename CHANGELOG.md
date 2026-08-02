@@ -157,3 +157,11 @@ Prepared the extraction system for future typed extractors.
 This marks the completion of Tier 1.
 
 The framework is now capable of serving dynamic HTTP applications with routing, extraction, JSON serialization and centralized error handling.
+
+- Introduced the `Middleware` trait.
+- Added the `Next` pipeline abstraction.
+- Added middleware storage to `Server`.
+- Refactored `Next` to support middleware chaining.
+- Prepared the server for composable middleware execution.
+- Implemented middleware pipeline construction.
+- Added execution of registered middleware.
