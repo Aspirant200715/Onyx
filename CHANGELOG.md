@@ -175,3 +175,6 @@ The framework is now capable of serving dynamic HTTP applications with routing, 
 - Added `RateLimiter` middleware.
 - Implemented the Token Bucket algorithm.
 - Added HTTP 429 responses when request limits are exceeded.
+- Added `StaticFiles` service.
+- Added configurable static root directory.
+- Added file reading API returning raw bytes.

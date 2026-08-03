@@ -1176,3 +1176,26 @@ Response
 
 For Tier 2, the middleware uses a temporary global client identifier.
 Per-client buckets using the remote socket address will be introduced in a future phase.
+
+## Phase 10.1 – Static File Service
+
+### Overview
+
+Introduced the `StaticFiles` service responsible for reading files from a configured root directory.
+
+### Design
+
+The component is intentionally independent of the router and HTTP layer.
+Its sole responsibility is reading files from disk.
+
+### Responsibilities
+
+- Store a configurable root directory.
+- Read files relative to the root.
+- Return file contents as raw bytes.
+
+### Benefits
+
+- Separates file system access from HTTP response generation.
+- Provides the foundation for static asset serving.
+- Enables future MIME type detection and routing integration.
