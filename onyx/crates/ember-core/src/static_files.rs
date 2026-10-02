@@ -2,26 +2,26 @@ use std::{
     fs, io,
     path::{Path, PathBuf},
 };
-
-/// Handles reading static files from a configured root directory.
+use crate::mime::mime_type;
 pub struct StaticFiles {
     root: PathBuf,
 }
 
 impl StaticFiles {
-    /// Creates a new static file service.
     pub fn new(root: impl Into<PathBuf>) -> Self {
         Self { root: root.into() }
     }
 
-    /// Returns the configured root directory.
     pub fn root(&self) -> &Path {
         &self.root
     }
 
-    /// Reads a file relative to the root directory.
     pub fn read(&self, path: impl AsRef<Path>) -> io::Result<Vec<u8>> {
         fs::read(self.root.join(path))
+    }
+
+    pub fn content_type(&self, path: impl AsRef<Path>) -> &'static str {
+        mime_type(path)
     }
 }
 
